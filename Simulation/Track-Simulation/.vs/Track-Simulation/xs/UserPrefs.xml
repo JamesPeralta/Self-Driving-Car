@@ -1,0 +1,33 @@
+﻿<Properties StartupConfiguration="{5AFECDA8-3E5B-0138-F857-0EAA229FA67A}|">
+  <MonoDevelop.Ide.Workbench ActiveDocument="Assets/Scripts/Car2DController.cs">
+    <Files>
+      <File FileName="Assets/Scripts/Car2DController.cs" Line="30" Column="44" />
+      <File FileName="Assets/Scripts/CameraFollow.cs" Line="18" Column="33" />
+    </Files>
+    <Pads>
+      <Pad Id="ProjectPad">
+        <State name="__root__">
+          <Node name="Track-Simulation" expanded="True">
+            <Node name="Assets" expanded="True">
+              <Node name="Scripts" expanded="True">
+                <Node name="Car2DController.cs" selected="True" />
+              </Node>
+            </Node>
+          </Node>
+        </State>
+      </Pad>
+      <Pad Id="MonoDevelop.UnitTesting.TestPad">
+        <State name="__root__">
+          <Node name="Track-Simulation" expanded="True" selected="True" />
+        </State>
+      </Pad>
+    </Pads>
+  </MonoDevelop.Ide.Workbench>
+  <MonoDevelop.Ide.DebuggingService.PinnedWatches />
+  <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" />
+  <MonoDevelop.Ide.ItemProperties.Assembly-CSharp PreferredExecutionTarget="f7095b79-9d2a-41a3-912a-2efa66f2cade" />
+  <MonoDevelop.Ide.DebuggingService.Breakpoints>
+    <BreakpointStore />
+  </MonoDevelop.Ide.DebuggingService.Breakpoints>
+  <MultiItemStartupConfigurations />
+</Properties>
