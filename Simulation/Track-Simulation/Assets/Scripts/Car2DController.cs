@@ -9,6 +9,12 @@ public class Car2DController : MonoBehaviour
     float distanceTravelled;
     Vector3 lastPosition;
 
+    void Awake()
+    {
+        NeuralNetwork myNN = new NeuralNetwork(new int[] { 5, 4, 3 });
+        myNN.printAttributes();
+    }
+
     // Start is called before the first frame update
     void Start()
     {
@@ -36,6 +42,6 @@ public class Car2DController : MonoBehaviour
         // Not optimal because it calculates more distance when you just spin the car
         distanceTravelled += Vector3.Distance(transform.position, lastPosition);
         lastPosition = transform.position;
-        Debug.Log(distanceTravelled);
+        //Debug.Log(distanceTravelled);
     }
 }

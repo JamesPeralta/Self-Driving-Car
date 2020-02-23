@@ -65,6 +65,7 @@
   <ItemGroup>
     <Compile Include="Assets\Scripts\CameraFollow.cs" />
     <Compile Include="Assets\Scripts\Car2DController.cs" />
+    <Compile Include="Assets\Scripts\NeuralNetwork.cs" />
     <Reference Include="Unity.TextMeshPro.Editor">
       <HintPath>/Users/jamesperalta/Desktop/Dev/Self-Driving-Car/Simulation/Track-Simulation/Library/ScriptAssemblies/Unity.TextMeshPro.Editor.dll</HintPath>
     </Reference>
