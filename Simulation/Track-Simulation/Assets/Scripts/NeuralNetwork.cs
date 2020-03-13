@@ -4,7 +4,7 @@ using System.IO;
 using UnityEngine;
 using System.Linq;
 
-public class NeuralNetwork: IComparable<NeuralNetwork>
+public class NeuralNetwork
 {
     private int[] layers;
     private float[][] neurons;
@@ -105,18 +105,6 @@ public class NeuralNetwork: IComparable<NeuralNetwork>
     }
 
     // ________ GA Functions ______________________
-    //Comparing for NeuralNetworks performance
-    public int CompareTo(NeuralNetwork other)
-    {
-        if (other == null)
-            return 1;
-        if (fitness > other.fitness)
-            return 1;
-        else if (fitness < other.fitness)
-            return -1;
-        else
-            return 0;
-    }
 
     //used as a simple mutation function for any genetic implementations.
     public void Mutate(int chance, float val)

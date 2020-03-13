@@ -1,8 +1,9 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Car2DController : MonoBehaviour
+public class Car2DController : MonoBehaviour, IComparable<Car2DController>
 {
     public float speedForce;
     public float torqueForce;
@@ -13,17 +14,18 @@ public class Car2DController : MonoBehaviour
     public NeuralNetwork myNN;
     private float[] input;
 
-    float distanceTravelled;
     Vector3 lastPosition;
     public Rigidbody2D rb;
     public BoxCollider2D boxCollider;
-    private bool hitWall = false;
+    public bool hitWall = false;
+    public float fitness;
 
     void Awake()
     {
         myNN = new NeuralNetwork(new int[] { 3, 5, 3 });
         input = new float[3];
         raycastMask = LayerMask.GetMask("Wall");
+        fitness = 0;
     }
 
     // Start is called before the first frame update
@@ -39,6 +41,7 @@ public class Car2DController : MonoBehaviour
     {
         if (hitWall == false)
         {
+            CalculateDistance();
             GetInputFromProximitySensors();
 
             float output = myNN.FeedForward(input);
@@ -57,18 +60,6 @@ public class Car2DController : MonoBehaviour
             {
                 rb.AddTorque(-1 * torqueForce);
             }
-            //if (Input.GetKey(KeyCode.W))
-            //{
-            //    forces += (transform.up * speedForce);
-            //}
-            //if (Input.GetKey(KeyCode.A))
-            //{
-            //    rb.AddTorque(1 * torqueForce);
-            //}
-            //if (Input.GetKey(KeyCode.D))
-            //{
-            //    rb.AddTorque(-1 * torqueForce);
-            //}
 
             Vector3 velocity = transform.InverseTransformDirection(rb.velocity);
             forces += (transform.right * -velocity.x * driftDrag);
@@ -83,8 +74,6 @@ public class Car2DController : MonoBehaviour
         {
             Physics2D.IgnoreCollision(collision.collider, this.boxCollider);
         }
-
-        Debug.Log("Hit Something");
         if (collision.collider.gameObject.tag == "Wall")
         {
             hitWall = true;
@@ -95,7 +84,8 @@ public class Car2DController : MonoBehaviour
     {
         Vector3[] proximitySensors = new Vector3[] { transform.up, transform.right, -transform.right };
 
-        for (int i = 0; i < proximitySensors.Length; i++) {
+        for (int i = 0; i < proximitySensors.Length; i++)
+        {
             RaycastHit2D hitInfo = Physics2D.Raycast(transform.position, proximitySensors[i], probingDistance, raycastMask);
 
             float distance;
@@ -112,5 +102,27 @@ public class Car2DController : MonoBehaviour
 
             input[i] = distance;
         }
+    }
+
+    void CalculateDistance()
+    {
+        Vector3 currentPos = this.transform.position;
+        Vector2 lastPosVector = new Vector2(lastPosition.x, lastPosition.y);
+        Vector2 currentPosVector = new Vector2(currentPos.x, currentPos.y);
+        float amountMoved = Vector2.Distance(lastPosVector, currentPosVector);
+
+        fitness += amountMoved;
+    }
+
+    public int CompareTo(Car2DController other)
+    {
+        if (other == null)
+            return 1;
+        if (fitness > other.fitness)
+            return 1;
+        else if (fitness < other.fitness)
+            return -1;
+        else
+            return 0;
     }
 }
