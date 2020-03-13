@@ -4,17 +4,13 @@ using UnityEngine;
 
 public class CameraFollow : MonoBehaviour
 {
-    public Transform target;
-
-    // Start is called before the first frame update
-    void Start()
-    {
-        
-    }
-
     // Update is called once per frame
     void Update()
     {
-        transform.position = new Vector3( target.position.x, target.position.y, -10f);
+        GameObject[] allCars = GameObject.FindGameObjectsWithTag("Player");
+        GameObject randCar = allCars[0];
+
+        // find a car and follow it
+        transform.position = new Vector3( randCar.transform.position.x, randCar.transform.position.y, -20f);
     }
 }
