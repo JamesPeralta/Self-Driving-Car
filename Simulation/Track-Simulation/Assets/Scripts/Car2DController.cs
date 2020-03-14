@@ -147,8 +147,9 @@ public class Car2DController : MonoBehaviour, IComparable<Car2DController>
     public void CheckProgression()
     {
         // Kill objects that are not progressing
-        if (lastFitness <= fitness)
+        if (lastFitness >= fitness)
         {
+            //Debug.Log("Last Fitness " + lastFitness + " Current Fitness " + fitness);
             hitWall = true;
         }
         else

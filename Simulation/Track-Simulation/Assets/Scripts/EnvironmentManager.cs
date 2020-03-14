@@ -26,18 +26,19 @@ public class EnvironmentManager : MonoBehaviour
             cars.Add(car);
         }
 
-        InvokeRepeating("RespawnPopulation", 1.0f, 5.0f);
+        InvokeRepeating("RespawnPopulation", 3.0f, 3.0f);
     }
 
     public void RespawnPopulation()
     {
         bool stillGoing = false;
+        int carsStillGoing = 0;
         for (int i = 0; i < cars.Count; i++)
         {
             if (cars[i].hitWall == false)
             {
                 stillGoing = true;
-                break;
+                carsStillGoing += 1;
             }
         }
 
@@ -55,7 +56,7 @@ public class EnvironmentManager : MonoBehaviour
     public void MutateCars()
     {
         cars.Sort();
-        Debug.Log(cars[cars.Count - 1].fitness);
+        Debug.Log("Max Fitness: " + cars[cars.Count - 1].fitness);
         for (int i = 0; i < cars.Count / 2; i++)
         {
             cars[i].myNN = cars[i + (populationSize / 2)].myNN.copy(new NeuralNetwork(new int[] { 3, 5, 3 }));
