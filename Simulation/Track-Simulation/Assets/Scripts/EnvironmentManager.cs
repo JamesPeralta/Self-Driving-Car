@@ -26,27 +26,36 @@ public class EnvironmentManager : MonoBehaviour
             cars.Add(car);
         }
 
-        InvokeRepeating("RespawnPopulation", 1.0f, 10.0f);
+        InvokeRepeating("RespawnPopulation", 1.0f, 5.0f);
     }
 
     public void RespawnPopulation()
     {
-        Debug.Log("Respawning");
-        MutateCars();
-
+        bool stillGoing = false;
         for (int i = 0; i < cars.Count; i++)
         {
-            cars[i].fitness = 0;
-            cars[i].hitWall = false;
-            cars[i].transform.position = new Vector3(0, 0, -1);
-            cars[i].transform.rotation = this.transform.rotation;
+            if (cars[i].hitWall == false)
+            {
+                stillGoing = true;
+                break;
+            }
+        }
+
+        if (stillGoing == false)
+        {
+            MutateCars();
+
+            for (int i = 0; i < cars.Count; i++)
+            {
+                cars[i].ResetCar();
+            }
         }
     }
 
     public void MutateCars()
     {
         cars.Sort();
-
+        Debug.Log(cars[cars.Count - 1].fitness);
         for (int i = 0; i < cars.Count / 2; i++)
         {
             cars[i].myNN = cars[i + (populationSize / 2)].myNN.copy(new NeuralNetwork(new int[] { 3, 5, 3 }));

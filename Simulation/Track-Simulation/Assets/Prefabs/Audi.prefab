@@ -94,11 +94,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d9726847986ea4dc1bc355c8cdce4738, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  speedForce: 5
+  speedForce: 3
   torqueForce: 1
   driftDrag: 6
   probingDistance: 2
+  fitness: 0
   rb: {fileID: 0}
+  boxCollider: {fileID: 0}
+  hitWall: 0
 --- !u!50 &3626458284872449196
 Rigidbody2D:
   serializedVersion: 4

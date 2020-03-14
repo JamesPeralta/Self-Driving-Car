@@ -13,12 +13,14 @@ public class Car2DController : MonoBehaviour, IComparable<Car2DController>
     private LayerMask raycastMask;
     public NeuralNetwork myNN;
     private float[] input;
+    public float fitness;
 
-    Vector3 lastPosition;
     public Rigidbody2D rb;
     public BoxCollider2D boxCollider;
+
     public bool hitWall = false;
-    public float fitness;
+    private float lastFitness;
+    private int nextCheckpoint;
 
     void Awake()
     {
@@ -26,6 +28,8 @@ public class Car2DController : MonoBehaviour, IComparable<Car2DController>
         input = new float[3];
         raycastMask = LayerMask.GetMask("Wall");
         fitness = 0;
+        lastFitness = fitness;
+        nextCheckpoint = 0;
     }
 
     // Start is called before the first frame update
@@ -33,7 +37,8 @@ public class Car2DController : MonoBehaviour, IComparable<Car2DController>
     {
         rb = GetComponent<Rigidbody2D>();
         boxCollider = GetComponent<BoxCollider2D>();
-        lastPosition = transform.position;
+        // 3 seconds to progress
+        InvokeRepeating("CheckProgression", 5.0f,  5.0f);
     }
 
     // Update is called once per frame
@@ -41,7 +46,6 @@ public class Car2DController : MonoBehaviour, IComparable<Car2DController>
     {
         if (hitWall == false)
         {
-            CalculateDistance();
             GetInputFromProximitySensors();
 
             float output = myNN.FeedForward(input);
@@ -64,7 +68,7 @@ public class Car2DController : MonoBehaviour, IComparable<Car2DController>
             Vector3 velocity = transform.InverseTransformDirection(rb.velocity);
             forces += (transform.right * -velocity.x * driftDrag);
             rb.AddForce(forces);
-            lastPosition = transform.position;
+            rb.velocity = Vector3.ClampMagnitude(rb.velocity, 10);
         }
     }
 
@@ -77,6 +81,16 @@ public class Car2DController : MonoBehaviour, IComparable<Car2DController>
         if (collision.collider.gameObject.tag == "Wall")
         {
             hitWall = true;
+        }
+    }
+
+
+    private void OnTriggerEnter2D(Collider2D collision)
+    {
+        if (collision.gameObject.name == ("CheckPoint (" + nextCheckpoint + ")"))
+        {
+            fitness += 1;
+            nextCheckpoint += 1;
         }
     }
 
@@ -104,16 +118,6 @@ public class Car2DController : MonoBehaviour, IComparable<Car2DController>
         }
     }
 
-    void CalculateDistance()
-    {
-        Vector3 currentPos = this.transform.position;
-        Vector2 lastPosVector = new Vector2(lastPosition.x, lastPosition.y);
-        Vector2 currentPosVector = new Vector2(currentPos.x, currentPos.y);
-        float amountMoved = Vector2.Distance(lastPosVector, currentPosVector);
-
-        fitness += amountMoved;
-    }
-
     public int CompareTo(Car2DController other)
     {
         if (other == null)
@@ -124,5 +128,33 @@ public class Car2DController : MonoBehaviour, IComparable<Car2DController>
             return -1;
         else
             return 0;
+    }
+
+    public void ResetCar()
+    {
+        CancelInvoke("CheckProgression");
+        // 3 seconds to progress
+        InvokeRepeating("CheckProgression", 5.0f, 5.0f);
+
+        fitness = 0;
+        lastFitness = 0;
+        nextCheckpoint = 0;
+        hitWall = false;
+        transform.position = new Vector3(0, 0, -1);
+        transform.rotation = this.transform.rotation;
+    }
+
+    public void CheckProgression()
+    {
+        // Kill objects that are not progressing
+        if (lastFitness <= fitness)
+        {
+            hitWall = true;
+        }
+        else
+        {
+            // Set lastFitness to current Fitness
+            lastFitness = fitness;
+        }
     }
 }
