@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using System;
 
 public class EnvironmentManager : MonoBehaviour
 {
@@ -24,6 +25,7 @@ public class EnvironmentManager : MonoBehaviour
         for (int i = 0; i < populationSize; i++)
         {
             Car2DController car = (Instantiate(prefab, new Vector3(0, 0, -1), this.transform.rotation)).GetComponent<Car2DController>();
+            car.myNN.Load("Assets/Scripts/NN-Weights/Weights31452.txt");
             cars.Add(car);
         }
 
@@ -41,6 +43,13 @@ public class EnvironmentManager : MonoBehaviour
         {
             Time.timeScale -= 1.0f;
             Debug.Log("Current playback speed: " + Time.timeScale);
+        }
+        if (Input.GetKeyDown(KeyCode.W))
+        {
+            //saves networks weights and biases to file, to preserve network performance
+            cars.Sort();
+            cars[populationSize - 1].myNN.Save("Assets/Scripts/NN-Weights/Weights" + DateTime.Now.Month + DateTime.Now.Day + DateTime.Now.Minute + DateTime.Now.Second + ".txt");
+            Debug.Log("Saving Neural Network Config");
         }
     }
 

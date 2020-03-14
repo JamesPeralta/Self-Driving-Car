@@ -13,14 +13,13 @@ public class Car2DController : MonoBehaviour, IComparable<Car2DController>
     private LayerMask raycastMask;
     public NeuralNetwork myNN;
     private float[] input;
-    public float fitness;
+    public int fitness;
 
     public Rigidbody2D rb;
     public BoxCollider2D boxCollider;
 
     public bool hitWall = false;
-    private float lastFitness;
-    private int nextCheckpoint;
+    private int lastFitness;
 
     void Awake()
     {
@@ -29,7 +28,6 @@ public class Car2DController : MonoBehaviour, IComparable<Car2DController>
         raycastMask = LayerMask.GetMask("Wall");
         fitness = 0;
         lastFitness = fitness;
-        nextCheckpoint = 0;
     }
 
     // Start is called before the first frame update
@@ -87,10 +85,10 @@ public class Car2DController : MonoBehaviour, IComparable<Car2DController>
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
+        int nextCheckpoint = fitness + 1 % 35;
         if (collision.gameObject.name == ("CheckPoint (" + nextCheckpoint + ")"))
         {
             fitness += 1;
-            nextCheckpoint += 1;
         }
     }
 
@@ -138,7 +136,6 @@ public class Car2DController : MonoBehaviour, IComparable<Car2DController>
 
         fitness = 0;
         lastFitness = 0;
-        nextCheckpoint = 0;
         hitWall = false;
         transform.position = new Vector3(0, 0, -1);
         transform.rotation = this.transform.rotation;
@@ -146,8 +143,8 @@ public class Car2DController : MonoBehaviour, IComparable<Car2DController>
 
     public void CheckProgression()
     {
-        // Kill objects that are not progressing and less than 34 fitness
-        if (lastFitness >= fitness && fitness < 34)
+        // Kill objects that are not progressing
+        if (lastFitness >= fitness)
         {
             //Debug.Log("Last Fitness " + lastFitness + " Current Fitness " + fitness);
             hitWall = true;
