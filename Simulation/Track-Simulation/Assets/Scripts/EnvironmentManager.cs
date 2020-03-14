@@ -13,6 +13,7 @@ public class EnvironmentManager : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        Time.timeScale = 1.0f;
         //If the size is not even we can't mutate properly
         if (populationSize % 2 != 0)
         {
@@ -27,6 +28,20 @@ public class EnvironmentManager : MonoBehaviour
         }
 
         InvokeRepeating("RespawnPopulation", 3.0f, 3.0f);
+    }
+
+    void Update()
+    {
+        if (Input.GetKeyDown(KeyCode.S))
+        {
+            Time.timeScale += 1.0f;
+            Debug.Log("Current playback speed: " + Time.timeScale);
+        }
+        if (Input.GetKeyDown(KeyCode.A))
+        {
+            Time.timeScale -= 1.0f;
+            Debug.Log("Current playback speed: " + Time.timeScale);
+        }
     }
 
     public void RespawnPopulation()
