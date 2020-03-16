@@ -94,7 +94,7 @@ public class Car2DController : MonoBehaviour, IComparable<Car2DController>
 
     void GetInputFromProximitySensors()
     {
-        Vector3[] proximitySensors = new Vector3[] { transform.up, transform.up+transform.right, transform.up-transform.right };
+        Vector3[] proximitySensors = new Vector3[] { transform.up, transform.right, -transform.right };
 
         for (int i = 0; i < proximitySensors.Length; i++)
         {
