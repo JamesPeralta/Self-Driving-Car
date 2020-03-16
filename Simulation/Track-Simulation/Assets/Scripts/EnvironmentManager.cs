@@ -25,7 +25,7 @@ public class EnvironmentManager : MonoBehaviour
         for (int i = 0; i < populationSize; i++)
         {
             Car2DController car = (Instantiate(prefab, new Vector3(0, 0, -1), this.transform.rotation)).GetComponent<Car2DController>();
-            car.myNN.Load("Assets/Scripts/NN-Weights/Weights31452.txt");
+            // car.myNN.Load("Assets/Scripts/NN-Weights/Weights31452.txt");
             cars.Add(car);
         }
 
