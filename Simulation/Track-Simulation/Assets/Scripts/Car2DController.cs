@@ -85,16 +85,18 @@ public class Car2DController : MonoBehaviour, IComparable<Car2DController>
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
-        int nextCheckpoint = fitness + 1 % 35;
+        int nextCheckpoint = fitness % 35;
         if (collision.gameObject.name == ("CheckPoint (" + nextCheckpoint + ")"))
         {
             fitness += 1;
+            Debug.Log("Next checkpoint: " + nextCheckpoint);
+            Debug.Log("New Fitness: " + fitness);
         }
     }
 
     void GetInputFromProximitySensors()
     {
-        Vector3[] proximitySensors = new Vector3[] { transform.up, transform.right, -transform.right };
+        Vector3[] proximitySensors = new Vector3[] { transform.up, transform.up + transform.right, transform.up - transform.right };
 
         for (int i = 0; i < proximitySensors.Length; i++)
         {
