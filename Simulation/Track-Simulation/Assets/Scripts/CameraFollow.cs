@@ -7,10 +7,10 @@ public class CameraFollow : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        GameObject[] allCars = GameObject.FindGameObjectsWithTag("Player");
-        GameObject randCar = allCars[0];
-
-        // find a car and follow it
-        transform.position = new Vector3( randCar.transform.position.x, randCar.transform.position.y, -20f);
+        // Find the best car and follow it
+        EnvironmentManager manager = GameObject.FindObjectOfType<EnvironmentManager>();
+        manager.cars.Sort();
+        GameObject bestCar = manager.cars[manager.populationSize - 1].gameObject;
+        transform.position = new Vector3( bestCar.transform.position.x, bestCar.transform.position.y, -20f);
     }
 }

@@ -7,7 +7,7 @@ public class EnvironmentManager : MonoBehaviour
 {
     public int populationSize;
     public GameObject prefab; // Holds the Prefab of our Audi
-    private List<Car2DController> cars;
+    public List<Car2DController> cars;
     public float MutationChance = 0.01f;
     public float MutationStrength = 0.5f;
 
@@ -25,7 +25,7 @@ public class EnvironmentManager : MonoBehaviour
         for (int i = 0; i < populationSize; i++)
         {
             Car2DController car = (Instantiate(prefab, new Vector3(0, 0, -1), this.transform.rotation)).GetComponent<Car2DController>();
-            car.myNN.Load("Assets/Scripts/NN-Weights/Fitness_Max.txt");
+            //car.myNN.Load("Assets/Scripts/NN-Weights/Fitness_Max.txt");
             cars.Add(car);
         }
 
