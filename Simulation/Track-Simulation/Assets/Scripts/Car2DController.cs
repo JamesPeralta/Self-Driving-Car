@@ -89,8 +89,6 @@ public class Car2DController : MonoBehaviour, IComparable<Car2DController>
         if (collision.gameObject.name == ("CheckPoint (" + nextCheckpoint + ")"))
         {
             fitness += 1;
-            Debug.Log("Next checkpoint: " + nextCheckpoint);
-            Debug.Log("New Fitness: " + fitness);
         }
     }
 

@@ -5,15 +5,18 @@ using System;
 
 public class EnvironmentManager : MonoBehaviour
 {
+    private int generation;
     public int populationSize;
     public GameObject prefab; // Holds the Prefab of our Audi
     public List<Car2DController> cars;
     public float MutationChance = 0.01f;
     public float MutationStrength = 0.5f;
+    public DashboardManager dashboard;
 
     // Start is called before the first frame update
-    void Start()
+    void Awake()
     {
+        generation = 0;
         Time.timeScale = 1.0f;
         //If the size is not even we can't mutate properly
         if (populationSize % 2 != 0)
@@ -29,6 +32,7 @@ public class EnvironmentManager : MonoBehaviour
             cars.Add(car);
         }
 
+        dashboard.InitializeDashboard(this.GetGenerationData());
         InvokeRepeating("RespawnPopulation", 3.0f, 3.0f);
     }
 
@@ -37,12 +41,12 @@ public class EnvironmentManager : MonoBehaviour
         if (Input.GetKeyDown(KeyCode.S))
         {
             Time.timeScale += 1.0f;
-            Debug.Log("Current playback speed: " + Time.timeScale);
+            dashboard.UpdatePlaybackSpeed(Time.timeScale);
         }
         if (Input.GetKeyDown(KeyCode.A))
         {
             Time.timeScale -= 1.0f;
-            Debug.Log("Current playback speed: " + Time.timeScale);
+            dashboard.UpdatePlaybackSpeed(Time.timeScale);
         }
         if (Input.GetKeyDown(KeyCode.W))
         {
@@ -74,6 +78,9 @@ public class EnvironmentManager : MonoBehaviour
             {
                 cars[i].ResetCar();
             }
+
+            generation += 1;
+            dashboard.UpdateGeneration(generation);
         }
     }
 
@@ -86,5 +93,24 @@ public class EnvironmentManager : MonoBehaviour
             cars[i].myNN = cars[i + (populationSize / 2)].myNN.copy(new NeuralNetwork(new int[] { 3, 5, 3 }));
             cars[i].myNN.Mutate((int)(1/MutationChance), MutationStrength);
         }
+    }
+
+    public GameObject ReturnBestCar()
+    {
+        cars.Sort();
+        return cars[cars.Count - 1].gameObject;
+    }
+
+    public IDictionary<string, string> GetGenerationData()
+    {
+        IDictionary<string, string> generationData = new Dictionary<string, string>();
+        generationData.Add("generationNumber", generation.ToString());
+        generationData.Add("populationNumber", populationSize.ToString());
+        generationData.Add("mutationRate", ((int)Math.Round(MutationChance * 100)).ToString());
+        generationData.Add("mutationStrength", ((int)Math.Round(MutationStrength * 100)).ToString());
+        generationData.Add("maxFitness", ReturnBestCar().GetComponent<Car2DController>().fitness.ToString());
+        generationData.Add("playBackSpeed", ((int) Time.timeScale).ToString());
+
+        return generationData;
     }
 }

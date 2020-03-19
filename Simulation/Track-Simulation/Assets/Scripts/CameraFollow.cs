@@ -4,13 +4,17 @@ using UnityEngine;
 
 public class CameraFollow : MonoBehaviour
 {
+    public DashboardManager dashboard;
+
     // Update is called once per frame
     void Update()
     {
         // Find the best car and follow it
         EnvironmentManager manager = GameObject.FindObjectOfType<EnvironmentManager>();
         manager.cars.Sort();
-        GameObject bestCar = manager.cars[manager.populationSize - 1].gameObject;
-        transform.position = new Vector3( bestCar.transform.position.x, bestCar.transform.position.y, -20f);
+
+        Car2DController bestCar = manager.cars[manager.populationSize - 1];
+        dashboard.UpdateMaxFitness(bestCar.fitness);
+        transform.position = new Vector3( bestCar.gameObject.transform.position.x, bestCar.gameObject.transform.position.y, -30f);
     }
 }
