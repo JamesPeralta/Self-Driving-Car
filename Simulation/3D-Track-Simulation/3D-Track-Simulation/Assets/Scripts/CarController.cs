@@ -4,6 +4,11 @@ using UnityEngine;
 
 public class CarController : MonoBehaviour
 {
+    // Object components
+    public Rigidbody rb;
+    public BoxCollider boxCollider;
+    private NeuralNetwork myNN;
+
     private float m_horizontalInput;
     private float m_verticalInput;
     private float m_steeringAngle;
@@ -13,32 +18,64 @@ public class CarController : MonoBehaviour
     public Transform frontDriverT, frontPassengerT;
     public Transform rearDriverT, rearPassengerT;
 
-    public float maxSteerAngle = 30;
-    public float motorForce = 50;
-    public LayerMask raycastMask;//Mask for the sensors
-    private float[] input = new float[5];//input to the neural network
+    public float maxSteerAngle;
+    public float motorForce;
+    public LayerMask raycastMask; //Mask for the sensors
+    private float[] input = new float[3]; //input to the neural network
 
     public float probingDistance;
+
+    private bool carStarted = false;
 
     void Awake()
     {
         raycastMask = LayerMask.GetMask("Barrier");
     }
 
+    private void Start()
+    {
+        rb = this.GetComponent<Rigidbody>();
+        boxCollider = GetComponent<BoxCollider>();
+        IgnoreContactWithOtherCars();
+    }
+
     private void FixedUpdate()
     {
-        GetInput();
-        Steer();
-        Accelerate();
-        UpdateWheelPoses();
-        GetInputFromProximitySensors();
+        if (myNN != null && carStarted)
+        {
+            GetInput();
+            Steer();
+            Accelerate();
+            UpdateWheelPoses();
+            rb.velocity = Vector3.ClampMagnitude(rb.velocity, 20);
+        }
     }
 
     #region Functions that manage car movement
     private void GetInput()
     {
-        m_horizontalInput = Input.GetAxis("Horizontal");
-        m_verticalInput = Input.GetAxis("Vertical");
+        GetInputFromProximitySensors();
+
+        m_horizontalInput = 0;
+        m_verticalInput = 0;
+
+        float output = myNN.FeedForward(input);
+        if (output == 0)
+        {
+            m_verticalInput = 1;
+        }
+        else if (output == 1)
+        {
+            m_horizontalInput = -1;
+        }
+        else if (output == 2)
+        {
+            m_horizontalInput = 1;
+        }
+        else
+        {
+            m_verticalInput = -1;
+        }
     }
 
     private void Steer()
@@ -62,21 +99,25 @@ public class CarController : MonoBehaviour
         UpdateWheelPose(rearPassengerW, rearPassengerT);
     }
 
-    private void UpdateWheelPose(WheelCollider _collider, Transform _transform) 
+    private void UpdateWheelPose(WheelCollider collider, Transform transform) 
     {
-        Vector3 _pos = _transform.position;
-        Quaternion _quat = _transform.rotation;
+        Vector3 pos = transform.position;
+        Quaternion quat = transform.rotation;
 
-        _collider.GetWorldPose(out _pos, out _quat);
+        collider.GetWorldPose(out pos, out quat);
 
-        _transform.position = _pos;
-        _transform.rotation = _quat;
+        transform.position = pos;
+        transform.rotation = quat;
     }
     #endregion
 
     #region Functions that manage collisions
     void OnCollisionEnter(Collision collision)
     {
+        if (collision.collider.gameObject.tag != "Terrain" && collision.collider.gameObject.tag != "Barrier")
+        {
+            Physics.IgnoreCollision(collision.collider, this.boxCollider);
+        }
     }
 
     void GetInputFromProximitySensors()
@@ -94,7 +135,6 @@ public class CarController : MonoBehaviour
             if (Physics.Raycast(transform.position + offset, proximitySensors[i], out hit, probingDistance, raycastMask))
             {
                 distance = probingDistance - hit.distance;
-                Debug.Log(distance);
                 Debug.DrawLine(transform.position + offset, transform.position + (proximitySensors[i] * probingDistance), Color.red);
             }
             else
@@ -102,7 +142,65 @@ public class CarController : MonoBehaviour
                 distance = 0;
                 Debug.DrawLine(transform.position + offset, transform.position + (proximitySensors[i] * probingDistance), Color.green);
             }
+
+            input[i] = distance;
         }
+    }
+
+    void IgnoreContactWithOtherCars()
+    {
+        Object[] allWheels = GameObject.FindObjectsOfType(typeof(WheelCollider));
+        Object[] allBoxColliders = GameObject.FindObjectsOfType(typeof(BoxCollider));
+
+        // Make wheels ignore all other wheels and box colliders in the system
+        for (int i = 0; i < allWheels.Length; i++)
+        {
+            // Ignore all other wheels
+            for (int j = 0; j < allWheels.Length; j++)
+            {
+                Physics.IgnoreCollision(allWheels[i] as WheelCollider, allWheels[j] as WheelCollider);
+            }
+
+            // Ignore all other box colliders
+            for (int j = 0; j < allBoxColliders.Length; j++)
+            {
+                Physics.IgnoreCollision(allWheels[i] as WheelCollider, allBoxColliders[j] as BoxCollider);
+            }
+        }
+
+        // Make all box colliders ignore all other wheels or box colliders in the system
+        for (int i = 0; i < allBoxColliders.Length; i++)
+        {
+            // Ignore all other wheels
+            for (int j = 0; j < allWheels.Length; j++)
+            {
+                Physics.IgnoreCollision(allBoxColliders[i] as BoxCollider, allWheels[j] as WheelCollider);
+            }
+
+            // Ignore all other box colliders
+            for (int j = 0; j < allBoxColliders.Length; j++)
+            {
+                Physics.IgnoreCollision(allBoxColliders[i] as BoxCollider, allBoxColliders[j] as BoxCollider);
+            }
+        }
+    }
+    #endregion
+
+    #region Manage car state
+    public void StartCar()
+    {
+        carStarted = true;
+    }
+
+    public void StopCar()
+    {
+        carStarted = false;
+    }
+
+    public void SetNeuralNetwork(NeuralNetwork nn)
+    {
+        myNN = nn;
+        StartCar();
     }
     #endregion
 }
