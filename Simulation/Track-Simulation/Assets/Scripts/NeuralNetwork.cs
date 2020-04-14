@@ -113,6 +113,7 @@ public class NeuralNetwork
         {
             for (int j = 0; j < biases[i].Length; j++)
             {
+                // This will always hold true so mutation will always happen?, I need to re-write this it doesn't make sense anymore  
                 biases[i][j] = (UnityEngine.Random.Range(0f, chance) <= 5) ? biases[i][j] += UnityEngine.Random.Range(-val, val) : biases[i][j];
             }
         }
@@ -123,6 +124,7 @@ public class NeuralNetwork
             {
                 for (int k = 0; k < weights[i][j].Length; k++)
                 {
+                    // This will always hold true so mutation will always happen?, I need to re-write this it doesn't make sense anymore  
                     weights[i][j][k] = (UnityEngine.Random.Range(0f, chance) <= 5) ? weights[i][j][k] += UnityEngine.Random.Range(-val, val) : weights[i][j][k];
 
                 }

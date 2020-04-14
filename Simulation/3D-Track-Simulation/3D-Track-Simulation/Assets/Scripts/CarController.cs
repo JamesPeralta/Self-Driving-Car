@@ -1,4 +1,4 @@
-﻿using System.Collections;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -15,12 +15,32 @@ public class CarController : MonoBehaviour
 
     public float maxSteerAngle = 30;
     public float motorForce = 50;
+    public LayerMask raycastMask;//Mask for the sensors
+    private float[] input = new float[5];//input to the neural network
 
+    public float probingDistance;
+
+    void Awake()
+    {
+        raycastMask = LayerMask.GetMask("Barrier");
+    }
+
+    private void FixedUpdate()
+    {
+        GetInput();
+        Steer();
+        Accelerate();
+        UpdateWheelPoses();
+        GetInputFromProximitySensors();
+    }
+
+    #region Functions that manage car movement
     private void GetInput()
     {
         m_horizontalInput = Input.GetAxis("Horizontal");
         m_verticalInput = Input.GetAxis("Vertical");
     }
+
     private void Steer()
     {
         m_steeringAngle = maxSteerAngle * m_horizontalInput;
@@ -52,12 +72,37 @@ public class CarController : MonoBehaviour
         _transform.position = _pos;
         _transform.rotation = _quat;
     }
-    
-    private void FixedUpdate()
+    #endregion
+
+    #region Functions that manage collisions
+    void OnCollisionEnter(Collision collision)
     {
-        GetInput();
-        Steer();
-        Accelerate();
-        UpdateWheelPoses();
     }
+
+    void GetInputFromProximitySensors()
+    {
+        Vector3 forwardSensor = transform.forward;
+        Vector3 northeastSensor = transform.forward + transform.right;
+        Vector3 northwestSensor = transform.forward - transform.right;
+        Vector3[] proximitySensors = new Vector3[] { forwardSensor, northeastSensor, northwestSensor};
+
+        Vector3 offset = new Vector3(0, 1, 0);
+        float distance;
+        for (int i = 0; i < proximitySensors.Length; i++)
+        {
+            RaycastHit hit;
+            if (Physics.Raycast(transform.position + offset, proximitySensors[i], out hit, probingDistance, raycastMask))
+            {
+                distance = probingDistance - hit.distance;
+                Debug.Log(distance);
+                Debug.DrawLine(transform.position + offset, transform.position + (proximitySensors[i] * probingDistance), Color.red);
+            }
+            else
+            {
+                distance = 0;
+                Debug.DrawLine(transform.position + offset, transform.position + (proximitySensors[i] * probingDistance), Color.green);
+            }
+        }
+    }
+    #endregion
 }
