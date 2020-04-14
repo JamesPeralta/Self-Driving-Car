@@ -99,7 +99,7 @@ public class CarController : MonoBehaviour
         UpdateWheelPose(rearPassengerW, rearPassengerT);
     }
 
-    private void UpdateWheelPose(WheelCollider collider, Transform transform) 
+    private void UpdateWheelPose(WheelCollider collider, Transform transform)
     {
         Vector3 pos = transform.position;
         Quaternion quat = transform.rotation;
@@ -120,12 +120,23 @@ public class CarController : MonoBehaviour
         }
     }
 
+    void OnTriggerEnter(Collider collision)
+    {
+        int fitness = -1;
+        int nextCheckpoint = fitness % 35;
+        Debug.Log(collision.gameObject.name);
+        if (collision.gameObject.name == ("CheckPoint (" + nextCheckpoint + ")"))
+        {
+            fitness += 1;
+        }
+    }
+
     void GetInputFromProximitySensors()
     {
         Vector3 forwardSensor = transform.forward;
         Vector3 northeastSensor = transform.forward + transform.right;
         Vector3 northwestSensor = transform.forward - transform.right;
-        Vector3[] proximitySensors = new Vector3[] { forwardSensor, northeastSensor, northwestSensor};
+        Vector3[] proximitySensors = new Vector3[] { forwardSensor, northeastSensor, northwestSensor };
 
         Vector3 offset = new Vector3(0, 1, 0);
         float distance;
