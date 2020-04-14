@@ -407,7 +407,7 @@ MonoBehaviour:
   MUTATION_RATE: 0
   MUTATION_RADIUS: 0
   N_GENERATIONS: 0
-  POPULATION_SIZE: 3
+  POPULATION_SIZE: 15
   prefab: {fileID: 0}
 --- !u!1 &1906930511
 GameObject:
