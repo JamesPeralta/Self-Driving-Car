@@ -4,7 +4,6 @@ using System.Collections.Generic;
 using UnityEngine;
 
 //TODO: Initialize dashboard
-//TODO: Create a Genepool
 //TODO: Loop that runs the genepool for N generations
 //TODO: Updates the dashboard
 //TODO: Has playback speed to make the simulation go faster
@@ -31,6 +30,7 @@ public class Simulation : MonoBehaviour
         if (genePool.PoolStillAlive() == false)
         {
             genePool.pool.Sort();
+
             // Sort the population based on fitness and report the best one
             genePool.GetBestGenome();
 
@@ -45,6 +45,22 @@ public class Simulation : MonoBehaviour
             genePool.NextGeneration();
         }
     }
+
+
+    void Update()
+    {
+        if (Input.GetKeyDown(KeyCode.S))
+        {
+            Time.timeScale += 1.0f;
+            Debug.Log(Time.timeScale);
+        }
+        if (Input.GetKeyDown(KeyCode.A))
+        {
+            Time.timeScale -= 1.0f;
+            Debug.Log(Time.timeScale);
+        }
+    }
+
 
     //public Structure GetBestCar()
     //{
