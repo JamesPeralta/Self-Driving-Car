@@ -17,6 +17,8 @@ public class Structure: MonoBehaviour, IComparable<Structure>
 {
     private int[] LAYER_SIZES = new int[] { 4, 7, 4 };
     private int GENOME_LENGTH = 71;
+    private const string WEIGHTS_PATH = "Assets/Scripts/NN-Weights/";
+    private string SAVE_PATH = WEIGHTS_PATH + DateTime.Now.Month + DateTime.Now.Day + DateTime.Now.Minute + DateTime.Now.Second + ".txt";
 
     private List<float> genome;
     private CarController car;
@@ -110,10 +112,12 @@ public class Structure: MonoBehaviour, IComparable<Structure>
         return genomeCopy;
     }
 
-    public void LoadGenomeFromFile(string path)//this loads the biases and weights from within a file into the neural network.
+    public void LoadGenomeFromFile(string fileName)//this loads the biases and weights from within a file into the neural network.
     {
-        TextReader tr = new StreamReader(path);
-        int NumberOfLines = (int)new FileInfo(path).Length;
+        string filePath = WEIGHTS_PATH + fileName;
+
+        TextReader tr = new StreamReader(filePath);
+        int NumberOfLines = (int)new FileInfo(filePath).Length;
         string[] ListLines = new string[NumberOfLines];
         int index = 1;
         for (int i = 1; i < NumberOfLines; i++)
@@ -123,7 +127,7 @@ public class Structure: MonoBehaviour, IComparable<Structure>
         tr.Close();
 
         genome = new List<float>();
-        if (new FileInfo(path).Length > 0)
+        if (new FileInfo(filePath).Length > 0)
         {
             for  (int i = 0; i < GENOME_LENGTH; i++)
             {
@@ -133,10 +137,10 @@ public class Structure: MonoBehaviour, IComparable<Structure>
         }
     }
 
-    public void SaveGenomeToFile(string path)//this is used for saving the biases and weights within the network to a file.
+    public void SaveGenomeToFile()//this is used for saving the biases and weights within the network to a file.
     {
-        File.Create(path).Close();
-        StreamWriter writer = new StreamWriter(path, true);
+        File.Create(SAVE_PATH).Close();
+        StreamWriter writer = new StreamWriter(SAVE_PATH, true);
 
         for (int i = 0; i < GENOME_LENGTH; i++)
         {

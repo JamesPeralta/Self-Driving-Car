@@ -6402,7 +6402,7 @@ Terrain:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1092938462}
-  m_Enabled: 0
+  m_Enabled: 1
   serializedVersion: 6
   m_TerrainData: {fileID: 15600000, guid: d216ab1bb2f42e44bb0c77a040f8eb11, type: 2}
   m_TreeDistance: 81
@@ -6454,7 +6454,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 83f906bf061f44c1a927f6a9f537b015, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  POPULATION_SIZE: 50
+  POPULATION_SIZE: 1
 --- !u!1 &1106716313
 GameObject:
   m_ObjectHideFlags: 0

@@ -1,8 +1,5 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
-using System;
-using System.Threading;
+﻿using System.Collections.Generic;
+using System.IO;
 
 // TODO: Initializes a pool of random structures
 // TODO: Spawns each structure onto the map
@@ -20,7 +17,7 @@ public class Genepool
     public List<Structure> pool;
     private int poolSize;
 
-    public Genepool(List<Structure> structure, int populationSize, int mutationRate, float mutationRadius)
+    public Genepool(List<Structure> structure, int populationSize, int mutationRate, float mutationRadius, string fileName = null)
     {
         MUTATION_RATE = mutationRate;
         MUTATION_RADIUS = mutationRadius;
@@ -33,6 +30,14 @@ public class Genepool
             for (int i = 0; i < poolSize; i++)
             {
                 pool.Add(new Structure(new List<float>()));
+            }
+        }
+
+        if (fileName != null)
+        {
+            for (int i = 0; i < poolSize; i++)
+            {
+                pool[i].LoadGenomeFromFile(fileName);
             }
         }
 
@@ -76,6 +81,7 @@ public class Genepool
     {
         List<Structure> newPool = new List<Structure>();
 
+        #region Genetic Operators
         // The bottom half are replaced by mutated versions of the top half
         for (int i = 0; i < pool.Count / 2; i++)
         {
@@ -89,9 +95,19 @@ public class Genepool
         {
             newPool.Add(new Structure(pool[i].deepCopyGenome()));
         }
+        #endregion
 
         pool = newPool;
 
         Test();
     }
+
+    #region Saving/Loading GA from disk
+    public void SaveBestPerformingStructure()
+    {
+        pool.Sort();
+        Structure bestGenome = pool[pool.Count - 1];
+        bestGenome.SaveGenomeToFile();
+    }
+    #endregion
 }

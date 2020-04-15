@@ -131,6 +131,7 @@ public class NeuralNetwork
         }
     }
 
+    // Argmax function
     public int GetMaxIndex(float[] anArray)
     {
         int index = 0;
