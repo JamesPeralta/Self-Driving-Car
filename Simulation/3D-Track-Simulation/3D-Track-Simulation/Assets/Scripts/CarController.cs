@@ -26,7 +26,7 @@ public class CarController : MonoBehaviour
     public float probingDistance;
 
     private bool carStarted = false;
-    public int fitness;
+    private int fitness;
     public bool hitWall = false;
     private int lastFitness;
 
@@ -54,6 +54,11 @@ public class CarController : MonoBehaviour
             UpdateWheelPoses();
             rb.velocity = Vector3.ClampMagnitude(rb.velocity, 10);
         }
+    }
+
+    public int GetFitness()
+    {
+        return fitness;
     }
 
     #region Functions that manage car movement

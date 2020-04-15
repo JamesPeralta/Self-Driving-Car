@@ -45,6 +45,7 @@ public class Structure: MonoBehaviour, IComparable<Structure>
             {
                 genome.Add(UnityEngine.Random.Range(-0.5f, 0.5f));
             }
+            Debug.Log("Initializing new genome");
         }
     }
 
@@ -74,27 +75,25 @@ public class Structure: MonoBehaviour, IComparable<Structure>
         return true;
     }
 
-    public void UpdateFitness()
-    {
-        fitness = car.fitness;
-    }
-
     public int GetFitness()
     {
-        UpdateFitness();
-        return fitness;
+        return car.GetFitness();
     }
 
     public int CompareTo(Structure other)
     {
-        if (other == null)
+        if (car.GetFitness() > other.car.GetFitness())
+        {
             return 1;
-        if (fitness > other.fitness)
-            return 1;
-        else if (fitness < other.fitness)
+        }
+        else if (car.GetFitness() < other.car.GetFitness())
+        {
             return -1;
+        }
         else
+        {
             return 0;
+        }
     }
 
     //used as a simple mutation function for any genetic implementations.

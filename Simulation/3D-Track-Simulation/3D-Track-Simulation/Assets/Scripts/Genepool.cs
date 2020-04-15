@@ -49,17 +49,12 @@ public class Genepool
 
     public Structure GetBestGenome()
     {
-        pool.Sort();
-
         Debug.Log("Max Fitness: " + pool[pool.Count - 1].GetFitness());
-        Debug.Log("Max Fitness: " + pool[0].GetFitness());
         return pool[pool.Count - 1];
     }
 
     public bool PoolStillAlive()
     {
-        UpdateFitnesses();
-
         int crashedCount = 0;
         for (int i = 0; i < pool.Count; i++)
         {
@@ -77,25 +72,10 @@ public class Genepool
         return true;
     }
 
-    public void UpdateFitnesses()
-    {
-        for (int i = 0; i < pool.Count; i++)
-        {
-            pool[i].UpdateFitness();
-        }
-    }
-
     public void ShowFitnesses()
     {
-        UpdateFitnesses();
         pool.Sort();
-        //List<int> allFitnesses = new List<int>();
-        for (int i = 0; i < pool.Count; i++)
-        {
-            pool[i].UpdateFitness();
-            Debug.Log(pool[i].GetFitness());
-            //allFitnesses.Add(pool[i].GetFitness());
-        }
+        pool.ForEach(aStruct => Debug.Log(aStruct.GetFitness()));
         Debug.Log("_______________________________");
     } 
 
@@ -106,7 +86,7 @@ public class Genepool
         // The bottom half are replaced by mutated versions of the top half
         for (int i = 0; i < pool.Count / 2; i++)
         {
-            Structure newGenome = new Structure(pool[i + (pool.Count / 2)].GetGenome());
+            Structure newGenome = new Structure(pool[i + (pool.Count / 2)].deepCopyGenome());
             newGenome.Mutate(MUTATION_RATE, MUTATION_RADIUS);
             newPool.Add(newGenome);
         }
@@ -114,7 +94,7 @@ public class Genepool
         // Top half stay the same
         for (int i = pool.Count / 2; i < pool.Count; i++)
         {
-            newPool.Add(new Structure(pool[i].GetGenome()));
+            newPool.Add(new Structure(pool[i].deepCopyGenome()));
         }
 
         pool = newPool;

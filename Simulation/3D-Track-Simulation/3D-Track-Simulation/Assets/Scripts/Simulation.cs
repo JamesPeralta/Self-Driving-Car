@@ -27,21 +27,21 @@ public class Simulation : MonoBehaviour
 
     void CheckOnGeneration()
     {
-        genePool.UpdateFitnesses();
+        //genePool.UpdateFitnesses();
 
         // If this whole generation has crashed
         if (genePool.PoolStillAlive() == false)
         {
+            genePool.pool.Sort();
+            // Sort the population based on fitness and report the best one
+            genePool.GetBestGenome();
+
             // Destory all old cars
             GameObject[] allPlayers = GameObject.FindGameObjectsWithTag("Player");
             for (int i = 0; i < allPlayers.Length; i++)
             {
                 Destroy(allPlayers[i]);
             }
-
-            genePool.ShowFitnesses();
-            // Sort the population based on fitness and report the best one
-            genePool.GetBestGenome();
 
             // Spawn the next generation
             genePool.NextGeneration();

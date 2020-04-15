@@ -1473,6 +1473,7 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 256
   probingDistance: 30
+  hitWall: 0
 --- !u!1 &5362453786958782717
 GameObject:
   m_ObjectHideFlags: 0
