@@ -4,32 +4,51 @@ using UnityEngine;
 
 public class CarController : MonoBehaviour
 {
-    // Object components
-    public Rigidbody rb;
-    public BoxCollider boxCollider;
-    private NeuralNetwork myNN;
-
+    #region Variables required to navigate enviroment
+    // Input used to apply force to a car
     private float m_horizontalInput;
     private float m_verticalInput;
     private float m_steeringAngle;
 
+    // Controls the movement of the car
     public WheelCollider frontDriverW, frontPassengerW;
     public WheelCollider rearDriverW, rearPassengerW;
     public Transform frontDriverT, frontPassengerT;
     public Transform rearDriverT, rearPassengerT;
-
     public float maxSteerAngle;
     public float motorForce;
-    public LayerMask raycastMask; //Mask for the sensors
-    private float[] input = new float[3]; //input to the neural network
 
-    public float probingDistance;
+    public LayerMask raycastMask; // Specifies which layers a raycast can hit
+    private float[] input = new float[3]; // Input to the neural network
+    public float probingDistance; // Distance proximity sensor can probe
+    #endregion
+
+
+    #region Variables required to manage state of the car
+    public Rigidbody rb;
+    public BoxCollider boxCollider;
+    private NeuralNetwork myNN;
 
     private bool carStarted = false;
     private int fitness;
     public bool hitWall = false;
     private int lastFitness;
+    #endregion
 
+    #region Getters/Setters
+    public int GetFitness()
+    {
+        return fitness;
+    }
+
+    public void SetNeuralNetwork(NeuralNetwork nn)
+    {
+        myNN = nn;
+        StartCar();
+    }
+    #endregion
+
+    #region Game Loop functions
     void Awake()
     {
         raycastMask = LayerMask.GetMask("Barrier");
@@ -55,11 +74,7 @@ public class CarController : MonoBehaviour
             rb.velocity = Vector3.ClampMagnitude(rb.velocity, 10);
         }
     }
-
-    public int GetFitness()
-    {
-        return fitness;
-    }
+    #endregion
 
     #region Functions that manage car movement
     private void GetInput()
@@ -70,22 +85,6 @@ public class CarController : MonoBehaviour
         m_verticalInput = 0;
 
         float output = myNN.FeedForward(input);
-        //if (Input.GetKey(KeyCode.W))
-        //{
-        //    m_verticalInput = 1;
-        //}
-        //if (Input.GetKey(KeyCode.A))
-        //{
-        //    m_horizontalInput = -1;
-        //}
-        //if (Input.GetKey(KeyCode.D))
-        //{
-        //    m_horizontalInput = 1;
-        //}
-        //if (Input.GetKey(KeyCode.D))
-        //{
-        //    m_verticalInput = -1;
-        //}
 
         if (output == 0)
         {
@@ -154,9 +153,7 @@ public class CarController : MonoBehaviour
         int nextCheckpoint = (fitness % 118 ) + 1;
         if (collision.gameObject.name == ("CheckPoint (" + nextCheckpoint + ")"))
         {
-            //Debug.Log("Increasing Fitness");
             fitness += 1;
-            //Debug.Log(fitness);
         }
     }
 
@@ -231,28 +228,13 @@ public class CarController : MonoBehaviour
             }
         }
     }
-
-    public void CheckProgression()
-    {
-        // Kill objects that are not progressing
-        if (lastFitness >= fitness)
-        {
-            //Debug.Log("Last Fitness " + lastFitness + " Current Fitness " + fitness);
-            hitWall = true;
-        }
-        else
-        {
-            // Set lastFitness to current Fitness
-            lastFitness = fitness;
-        }
-    }
     #endregion
 
     #region Manage car state
     public void StartCar()
     {
         carStarted = true;
-        // 3 seconds to progress
+        // 10 seconds to progress
         InvokeRepeating("CheckProgression", 10.0f, 10.0f);
     }
 
@@ -261,10 +243,18 @@ public class CarController : MonoBehaviour
         carStarted = false;
     }
 
-    public void SetNeuralNetwork(NeuralNetwork nn)
+    public void CheckProgression()
     {
-        myNN = nn;
-        StartCar();
+        // Kill objects that are not progressing
+        if (lastFitness >= fitness)
+        {
+            hitWall = true;
+        }
+        else
+        {
+            // Set lastFitness to current Fitness
+            lastFitness = fitness;
+        }
     }
     #endregion
 }

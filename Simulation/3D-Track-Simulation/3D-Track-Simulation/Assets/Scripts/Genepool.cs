@@ -49,7 +49,7 @@ public class Genepool
 
     public Structure GetBestGenome()
     {
-        Debug.Log("Max Fitness: " + pool[pool.Count - 1].GetFitness());
+        pool.Sort();
         return pool[pool.Count - 1];
     }
 

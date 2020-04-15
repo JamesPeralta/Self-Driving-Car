@@ -32,12 +32,10 @@ public class CameraController : MonoBehaviour
 
         if (allPlayers.Length > 0)
         {
-            //Simulation simulation = GameObject.FindObjectOfType<Simulation>();
-            //Structure bestStructure = simulation.GetBestCar();
+            Simulation simulation = GameObject.FindObjectOfType<Simulation>();
+            Structure bestStructure = simulation.GetBestCar();
 
-            //objectToFollow = bestStructure.GetCar().gameObject.transform;
-            GameObject startingLine = GameObject.Find("Starting Line");
-            objectToFollow = startingLine.gameObject.transform;
+            objectToFollow = bestStructure.GetCar().gameObject.transform;
         }
         else
         {

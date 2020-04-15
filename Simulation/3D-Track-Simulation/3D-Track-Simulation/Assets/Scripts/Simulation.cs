@@ -32,7 +32,8 @@ public class Simulation : MonoBehaviour
             genePool.pool.Sort();
 
             // Sort the population based on fitness and report the best one
-            genePool.GetBestGenome();
+            Structure bestGenome = genePool.GetBestGenome();
+            Debug.Log(bestGenome.GetFitness());
 
             // Destory all old cars
             GameObject[] allPlayers = GameObject.FindGameObjectsWithTag("Player");
@@ -62,9 +63,8 @@ public class Simulation : MonoBehaviour
     }
 
 
-    //public Structure GetBestCar()
-    //{
-    //    genePool.UpdateFitnesses();
-    //    return genePool.GetBestGenome();
-    //}
+    public Structure GetBestCar()
+    {
+        return genePool.GetBestGenome();
+    }
 }
