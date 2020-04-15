@@ -149,7 +149,9 @@ public class CarController : MonoBehaviour
         int nextCheckpoint = (fitness % 118 ) + 1;
         if (collision.gameObject.name == ("CheckPoint (" + nextCheckpoint + ")"))
         {
-            fitness += 1; 
+            //Debug.Log("Increasing Fitness");
+            fitness += 1;
+            //Debug.Log(fitness);
         }
     }
 

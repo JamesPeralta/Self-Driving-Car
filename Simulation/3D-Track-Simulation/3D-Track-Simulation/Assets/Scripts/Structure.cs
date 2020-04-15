@@ -21,7 +21,7 @@ public class Structure: MonoBehaviour, IComparable<Structure>
     private List<float> genome;
     private CarController car;
     private NeuralNetwork neuralNetwork;
-    private int fitness;
+    public int fitness;
 
     //Has access to car prefab and spawns it
     public Structure(List<float> _genome)
@@ -81,6 +81,7 @@ public class Structure: MonoBehaviour, IComparable<Structure>
 
     public int GetFitness()
     {
+        UpdateFitness();
         return fitness;
     }
 

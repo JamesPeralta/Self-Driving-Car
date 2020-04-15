@@ -39,20 +39,18 @@ public class Simulation : MonoBehaviour
                 Destroy(allPlayers[i]);
             }
 
+            genePool.ShowFitnesses();
             // Sort the population based on fitness and report the best one
             genePool.GetBestGenome();
 
             // Spawn the next generation
             genePool.NextGeneration();
-
-            // If every member in this pool has crashed, start the next generation
-            Debug.Log("Population is done");
         }
     }
 
-    public Structure GetBestCar()
-    {
-        genePool.UpdateFitnesses();
-        return genePool.GetBestGenome();
-    }
+    //public Structure GetBestCar()
+    //{
+    //    genePool.UpdateFitnesses();
+    //    return genePool.GetBestGenome();
+    //}
 }

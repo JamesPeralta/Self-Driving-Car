@@ -52,6 +52,7 @@ public class Genepool
         pool.Sort();
 
         Debug.Log("Max Fitness: " + pool[pool.Count - 1].GetFitness());
+        Debug.Log("Max Fitness: " + pool[0].GetFitness());
         return pool[pool.Count - 1];
     }
 
@@ -83,6 +84,20 @@ public class Genepool
             pool[i].UpdateFitness();
         }
     }
+
+    public void ShowFitnesses()
+    {
+        UpdateFitnesses();
+        pool.Sort();
+        //List<int> allFitnesses = new List<int>();
+        for (int i = 0; i < pool.Count; i++)
+        {
+            pool[i].UpdateFitness();
+            Debug.Log(pool[i].GetFitness());
+            //allFitnesses.Add(pool[i].GetFitness());
+        }
+        Debug.Log("_______________________________");
+    } 
 
     public void NextGeneration()
     {
