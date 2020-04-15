@@ -2,14 +2,6 @@
 using System.Collections.Generic;
 
 
-// TODO: 1D array for the architecture of the Neural Network. [3, 7, 4] represents a dense neural network with an input layer of size 3, hidden layer of size 7, and an output layer of size 4.
-// TODO: Init 2D array representing the neurons
-// TODO: Init 2D array representing the biases
-// TODO: Init 3D array representing the weights
-// TODO: Activation function
-// TODO: Feed forward function: Takes an input and feeds it forward through the network. Collects the output at the output layer.
-
-
 public class NeuralNetwork
 {
     private int[] layers;

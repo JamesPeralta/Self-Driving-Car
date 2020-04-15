@@ -5,13 +5,7 @@ using UnityEngine;
 using System.IO;
 using System.Linq;
 
-
-// TODO: Contains fitness value
-// TODO: Contains all operators
-//         - n_point_crossover
-//         - mutate
-// TODO: Save function
-// TODO: Load function
+// TODO: Implement N point crossover
 
 public class Structure: MonoBehaviour, IComparable<Structure>
 {
@@ -23,12 +17,10 @@ public class Structure: MonoBehaviour, IComparable<Structure>
     private List<float> genome;
     private CarController car;
     private NeuralNetwork neuralNetwork;
-    public int fitness;
 
     //Has access to car prefab and spawns it
     public Structure(List<float> _genome)
     {
-        fitness = 0;
         genome = _genome;
 
         // Instantiate the car

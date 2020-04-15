@@ -1,14 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.IO;
 
-// TODO: Initializes a pool of random structures
-// TODO: Spawns each structure onto the map
-// TODO: Checks for the status of structures
-// TODO:   - If a structure is not making any progress it is killed
-// TODO:   - If all structures have been killed or crashed, move onto the next step
-// TODO: Sorts each structure by their fitness function
-// TODO: Creates the next generation
-
 
 public class Genepool
 {
