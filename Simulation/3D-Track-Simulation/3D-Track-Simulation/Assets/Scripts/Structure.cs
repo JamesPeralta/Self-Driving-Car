@@ -45,7 +45,6 @@ public class Structure: MonoBehaviour, IComparable<Structure>
             {
                 genome.Add(UnityEngine.Random.Range(-0.5f, 0.5f));
             }
-            Debug.Log("Initializing new genome");
         }
     }
 

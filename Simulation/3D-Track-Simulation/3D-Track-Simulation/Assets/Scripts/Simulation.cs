@@ -11,7 +11,7 @@ using UnityEngine;
 
 public class Simulation : MonoBehaviour
 {
-    private int MUTATION_RATE = 10; // As a %
+    private int MUTATION_RATE = 50; // As a %
     private float MUTATION_RADIUS = 0.5f;
     private int N_GENERATIONS = 100;
     public int POPULATION_SIZE;
@@ -27,8 +27,6 @@ public class Simulation : MonoBehaviour
 
     void CheckOnGeneration()
     {
-        //genePool.UpdateFitnesses();
-
         // If this whole generation has crashed
         if (genePool.PoolStillAlive() == false)
         {
