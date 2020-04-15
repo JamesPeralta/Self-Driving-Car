@@ -15,12 +15,12 @@ using System.Threading;
 
 public class Genepool
 {
-    public float MUTATION_RATE;
-    public int MUTATION_RADIUS;
+    public int MUTATION_RATE;
+    public float MUTATION_RADIUS;
     public List<Structure> pool;
     private int poolSize;
 
-    public Genepool(List<Structure> structure, int populationSize, float mutationRate, int mutationRadius)
+    public Genepool(List<Structure> structure, int populationSize, int mutationRate, float mutationRadius)
     {
         MUTATION_RATE = mutationRate;
         MUTATION_RADIUS = mutationRadius;
@@ -28,7 +28,7 @@ public class Genepool
         poolSize = populationSize;
 
         // Initialize pool of random structures
-        if (structure.Count <= 0)
+        if (pool.Count <= 0)
         {
             for (int i = 0; i < poolSize; i++)
             {
@@ -36,7 +36,6 @@ public class Genepool
             }
         }
 
-        //Test them out
         Test();
     }
 
@@ -46,5 +45,65 @@ public class Genepool
         {
             pool[i].Evaluate();
         }
+    }
+
+    public Structure GetBestGenome()
+    {
+        pool.Sort();
+
+        Debug.Log("Max Fitness: " + pool[pool.Count - 1].GetFitness());
+        return pool[pool.Count - 1];
+    }
+
+    public bool PoolStillAlive()
+    {
+        UpdateFitnesses();
+
+        int crashedCount = 0;
+        for (int i = 0; i < pool.Count; i++)
+        {
+            if (pool[i].IsAlive() == false)
+            {
+                crashedCount++;
+            }
+        }
+
+        if (crashedCount == poolSize)
+        {
+            return false;
+        }
+
+        return true;
+    }
+
+    public void UpdateFitnesses()
+    {
+        for (int i = 0; i < pool.Count; i++)
+        {
+            pool[i].UpdateFitness();
+        }
+    }
+
+    public void NextGeneration()
+    {
+        List<Structure> newPool = new List<Structure>();
+
+        // The bottom half are replaced by mutated versions of the top half
+        for (int i = 0; i < pool.Count / 2; i++)
+        {
+            Structure newGenome = new Structure(pool[i + (pool.Count / 2)].GetGenome());
+            newGenome.Mutate(MUTATION_RATE, MUTATION_RADIUS);
+            newPool.Add(newGenome);
+        }
+
+        // Top half stay the same
+        for (int i = pool.Count / 2; i < pool.Count; i++)
+        {
+            newPool.Add(new Structure(pool[i].GetGenome()));
+        }
+
+        pool = newPool;
+
+        Test();
     }
 }

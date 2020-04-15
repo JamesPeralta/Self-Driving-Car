@@ -6,18 +6,14 @@ using System.IO;
 using System.Linq;
 
 
-// TODO: Contains the genome
-// TODO: Contains a neural network
-// TODO: Contains a car prefab
 // TODO: Contains fitness value
 // TODO: Contains all operators
 //         - n_point_crossover
 //         - mutate
-// TODO: Contains evaluate function: When this function is called, a car prefab will be created and will attempt to navigate the track.
 // TODO: Save function
 // TODO: Load function
 
-public class Structure: MonoBehaviour
+public class Structure: MonoBehaviour, IComparable<Structure>
 {
     private int[] LAYER_SIZES = new int[] { 3, 7, 4 };
     private int GENOME_LENGTH = 63;
@@ -25,16 +21,19 @@ public class Structure: MonoBehaviour
     private List<float> genome;
     private CarController car;
     private NeuralNetwork neuralNetwork;
+    private int fitness;
 
     //Has access to car prefab and spawns it
     public Structure(List<float> _genome)
     {
+        fitness = 0;
         genome = _genome;
 
         // Instantiate the car
         GameObject instance = Resources.Load("HatchBack") as GameObject;
         car = (Instantiate(instance)).GetComponent<CarController>();
-        car.transform.position = new Vector3(40, 30, 380);
+        GameObject startingLine = GameObject.Find("Starting Line");
+        car.transform.position = startingLine.gameObject.transform.position;
 
         // Instantiate the Neural Network
         neuralNetwork = new NeuralNetwork(LAYER_SIZES);
@@ -49,11 +48,52 @@ public class Structure: MonoBehaviour
         }
     }
 
+    public List<float> GetGenome()
+    {
+        return genome;
+    }
+
+    public CarController GetCar()
+    {
+        return car;
+    }
+
     public void Evaluate()
     {
-        // Configure car with Neural Network
         neuralNetwork.ConfigureNeuralNetwork(genome);
         car.SetNeuralNetwork(neuralNetwork);
+    }
+
+    public bool IsAlive()
+    {
+        if (car.hitWall)
+        {
+            return false;
+        }
+
+        return true;
+    }
+
+    public void UpdateFitness()
+    {
+        fitness = car.fitness;
+    }
+
+    public int GetFitness()
+    {
+        return fitness;
+    }
+
+    public int CompareTo(Structure other)
+    {
+        if (other == null)
+            return 1;
+        if (fitness > other.fitness)
+            return 1;
+        else if (fitness < other.fitness)
+            return -1;
+        else
+            return 0;
     }
 
     //used as a simple mutation function for any genetic implementations.
@@ -61,7 +101,7 @@ public class Structure: MonoBehaviour
     {
         for (int i = 0; i < genome.Count; i++)
         {
-            genome[i] = (UnityEngine.Random.Range(0, 100) <= mutationRate * 100) ? genome[i] += UnityEngine.Random.Range(-mutationRadius, mutationRadius) : genome[i];
+            genome[i] = (UnityEngine.Random.Range(0, 100) <= mutationRate) ? genome[i] += UnityEngine.Random.Range(-mutationRadius, mutationRadius) : genome[i];
         }
     }
 

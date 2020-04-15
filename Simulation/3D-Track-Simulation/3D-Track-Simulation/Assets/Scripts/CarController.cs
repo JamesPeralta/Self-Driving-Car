@@ -26,10 +26,15 @@ public class CarController : MonoBehaviour
     public float probingDistance;
 
     private bool carStarted = false;
+    public int fitness;
+    public bool hitWall = false;
+    private int lastFitness;
 
     void Awake()
     {
         raycastMask = LayerMask.GetMask("Barrier");
+        fitness = 0;
+        lastFitness = fitness;
     }
 
     private void Start()
@@ -41,13 +46,13 @@ public class CarController : MonoBehaviour
 
     private void FixedUpdate()
     {
-        if (myNN != null && carStarted)
+        if (myNN != null && carStarted && hitWall == false)
         {
             GetInput();
             Steer();
             Accelerate();
             UpdateWheelPoses();
-            rb.velocity = Vector3.ClampMagnitude(rb.velocity, 20);
+            rb.velocity = Vector3.ClampMagnitude(rb.velocity, 10);
         }
     }
 
@@ -60,6 +65,23 @@ public class CarController : MonoBehaviour
         m_verticalInput = 0;
 
         float output = myNN.FeedForward(input);
+        //if (Input.GetKey(KeyCode.W))
+        //{
+        //    m_verticalInput = 1;
+        //}
+        //if (Input.GetKey(KeyCode.A))
+        //{
+        //    m_horizontalInput = -1;
+        //}
+        //if (Input.GetKey(KeyCode.D))
+        //{
+        //    m_horizontalInput = 1;
+        //}
+        //if (Input.GetKey(KeyCode.D))
+        //{
+        //    m_verticalInput = -1;
+        //}
+
         if (output == 0)
         {
             m_verticalInput = 1;
@@ -114,20 +136,20 @@ public class CarController : MonoBehaviour
     #region Functions that manage collisions
     void OnCollisionEnter(Collision collision)
     {
-        if (collision.collider.gameObject.tag != "Terrain" && collision.collider.gameObject.tag != "Barrier")
+        if (collision.collider.gameObject.tag == "Barrier")
         {
-            Physics.IgnoreCollision(collision.collider, this.boxCollider);
+            hitWall = true;
+            frontDriverW.motorTorque = 0;
+            frontPassengerW.motorTorque = 0;
         }
     }
 
     void OnTriggerEnter(Collider collision)
     {
-        int fitness = -1;
-        int nextCheckpoint = fitness % 35;
-        Debug.Log(collision.gameObject.name);
+        int nextCheckpoint = (fitness % 118 ) + 1;
         if (collision.gameObject.name == ("CheckPoint (" + nextCheckpoint + ")"))
         {
-            fitness += 1;
+            fitness += 1; 
         }
     }
 
@@ -191,8 +213,30 @@ public class CarController : MonoBehaviour
             // Ignore all other box colliders
             for (int j = 0; j < allBoxColliders.Length; j++)
             {
+                BoxCollider myBox = allBoxColliders[i] as BoxCollider;
+                BoxCollider otherBox = allBoxColliders[j] as BoxCollider;
+                if (myBox.gameObject.tag == "CheckPoint" || otherBox.gameObject.tag == "CheckPoint")
+                {
+                    continue;
+                }
+
                 Physics.IgnoreCollision(allBoxColliders[i] as BoxCollider, allBoxColliders[j] as BoxCollider);
             }
+        }
+    }
+
+    public void CheckProgression()
+    {
+        // Kill objects that are not progressing
+        if (lastFitness >= fitness)
+        {
+            //Debug.Log("Last Fitness " + lastFitness + " Current Fitness " + fitness);
+            hitWall = true;
+        }
+        else
+        {
+            // Set lastFitness to current Fitness
+            lastFitness = fitness;
         }
     }
     #endregion
@@ -201,6 +245,8 @@ public class CarController : MonoBehaviour
     public void StartCar()
     {
         carStarted = true;
+        // 3 seconds to progress
+        InvokeRepeating("CheckProgression", 10.0f, 10.0f);
     }
 
     public void StopCar()

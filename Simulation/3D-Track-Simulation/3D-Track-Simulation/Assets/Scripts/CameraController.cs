@@ -26,8 +26,29 @@ public class CameraController : MonoBehaviour
         transform.position = Vector3.Lerp(transform.position, _targetPos, followSpeed * Time.deltaTime);
     }
 
+    public void ChooseTarget()
+    {
+        Object[] allPlayers = GameObject.FindGameObjectsWithTag("Player");
+
+        if (allPlayers.Length > 0)
+        {
+            //Simulation simulation = GameObject.FindObjectOfType<Simulation>();
+            //Structure bestStructure = simulation.GetBestCar();
+
+            //objectToFollow = bestStructure.GetCar().gameObject.transform;
+            GameObject startingLine = GameObject.Find("Starting Line");
+            objectToFollow = startingLine.gameObject.transform;
+        }
+        else
+        {
+            GameObject startingLine = GameObject.Find("Starting Line");
+            objectToFollow = startingLine.gameObject.transform;
+        }
+    }
+
     public void FixedUpdate()
     {
+        ChooseTarget();
         LookAtTarget();
         MoveToTarget();
     }
