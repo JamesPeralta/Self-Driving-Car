@@ -19,7 +19,7 @@ public class CarController : MonoBehaviour
     public float motorForce;
 
     public LayerMask raycastMask; // Specifies which layers a raycast can hit
-    private float[] input = new float[3]; // Input to the neural network
+    private float[] input = new float[4]; // Input to the neural network
     public float probingDistance; // Distance proximity sensor can probe
     #endregion
 
@@ -71,7 +71,6 @@ public class CarController : MonoBehaviour
             Steer();
             Accelerate();
             UpdateWheelPoses();
-            rb.velocity = Vector3.ClampMagnitude(rb.velocity, 10);
         }
     }
     #endregion
@@ -182,6 +181,9 @@ public class CarController : MonoBehaviour
 
             input[i] = distance;
         }
+
+        // Speed in meters per second
+        input[3] = rb.velocity.magnitude;
     }
 
     void IgnoreContactWithOtherCars()

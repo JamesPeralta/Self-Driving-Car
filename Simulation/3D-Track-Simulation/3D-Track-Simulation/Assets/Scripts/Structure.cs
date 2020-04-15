@@ -15,8 +15,8 @@ using System.Linq;
 
 public class Structure: MonoBehaviour, IComparable<Structure>
 {
-    private int[] LAYER_SIZES = new int[] { 3, 7, 4 };
-    private int GENOME_LENGTH = 63;
+    private int[] LAYER_SIZES = new int[] { 4, 7, 4 };
+    private int GENOME_LENGTH = 71;
 
     private List<float> genome;
     private CarController car;
@@ -39,18 +39,13 @@ public class Structure: MonoBehaviour, IComparable<Structure>
         neuralNetwork = new NeuralNetwork(LAYER_SIZES);
 
         // If the genome is invalid, create a new random genome
-        if (genome.Count != 63)
+        if (genome.Count != GENOME_LENGTH)
         {
             for (int i = 0; i < GENOME_LENGTH; i++)
             {
                 genome.Add(UnityEngine.Random.Range(-0.5f, 0.5f));
             }
         }
-    }
-
-    public List<float> GetGenome()
-    {
-        return genome;
     }
 
     public CarController GetCar()

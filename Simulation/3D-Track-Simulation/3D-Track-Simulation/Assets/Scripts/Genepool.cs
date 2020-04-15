@@ -72,13 +72,6 @@ public class Genepool
         return true;
     }
 
-    public void ShowFitnesses()
-    {
-        pool.Sort();
-        pool.ForEach(aStruct => Debug.Log(aStruct.GetFitness()));
-        Debug.Log("_______________________________");
-    } 
-
     public void NextGeneration()
     {
         List<Structure> newPool = new List<Structure>();

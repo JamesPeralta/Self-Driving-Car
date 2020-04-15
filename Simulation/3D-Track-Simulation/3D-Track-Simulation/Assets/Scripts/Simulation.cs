@@ -53,12 +53,10 @@ public class Simulation : MonoBehaviour
         if (Input.GetKeyDown(KeyCode.S))
         {
             Time.timeScale += 1.0f;
-            Debug.Log(Time.timeScale);
         }
         if (Input.GetKeyDown(KeyCode.A))
         {
             Time.timeScale -= 1.0f;
-            Debug.Log(Time.timeScale);
         }
     }
 
