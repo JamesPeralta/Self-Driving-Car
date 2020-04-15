@@ -11,6 +11,8 @@ public class DashboardManager : MonoBehaviour
     public UnityEngine.UI.Text mutationStrengthValue;
     public UnityEngine.UI.Text maxFitnessValue;
     public UnityEngine.UI.Text playBackSpeedValue;
+    public Window_graph graph;
+    private List<int> valuesList = new List<int>();
 
     public void InitializeDashboard(IDictionary<string, string>  generationData)
     {
@@ -54,5 +56,11 @@ public class DashboardManager : MonoBehaviour
     public void UpdateGeneration(int generation)
     {
         generationValue.text = generation.ToString();
+    }
+
+    public void UpdateChart(int generation, int maxFitness)
+    {
+        valuesList.Add(maxFitness);
+        graph.ShowGraph(valuesList);
     }
 }

@@ -72,6 +72,9 @@ public class EnvironmentManager : MonoBehaviour
 
         if (stillGoing == false)
         {
+            cars.Sort();
+            int maxFitness = cars[cars.Count - 1].fitness;
+            
             MutateCars();
 
             for (int i = 0; i < cars.Count; i++)
@@ -79,6 +82,7 @@ public class EnvironmentManager : MonoBehaviour
                 cars[i].ResetCar();
             }
 
+            dashboard.UpdateChart(generation, maxFitness);
             generation += 1;
             dashboard.UpdateGeneration(generation);
         }
