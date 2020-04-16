@@ -13,6 +13,8 @@ public class Simulation : MonoBehaviour
     public int POPULATION_SIZE;
     private string WEIGHTS_FILE = null;
     private Genepool genePool;
+    public DashboardManager dashboard;
+    int generationNumber;
 
     // Start is called before the first frame update
     void Start()
@@ -28,6 +30,10 @@ public class Simulation : MonoBehaviour
 
         // If user has choosen to load weights
         InvokeRepeating("CheckOnGeneration", 5.0f, 5.0f);
+
+        // Initialize the dashboard
+        generationNumber = 1;
+        dashboard.InitializeDashboard(this.GetGenerationData());
     }
 
     void CheckOnGeneration()
@@ -40,6 +46,7 @@ public class Simulation : MonoBehaviour
             // Sort the population based on fitness and report the best one
             Structure bestGenome = genePool.GetBestGenome();
             Debug.Log(bestGenome.GetFitness());
+            dashboard.UpdateMaxFitness(bestGenome.GetFitness());
 
             // Destory all old cars
             GameObject[] allPlayers = GameObject.FindGameObjectsWithTag("Player");
@@ -48,6 +55,8 @@ public class Simulation : MonoBehaviour
                 Destroy(allPlayers[i]);
             }
 
+            generationNumber++;
+            dashboard.UpdateGeneration(generationNumber);
             genePool.NextGeneration();
         }
     }
@@ -63,6 +72,8 @@ public class Simulation : MonoBehaviour
             Time.timeScale -= 1.0f;
         }
 
+        dashboard.UpdatePlaybackSpeed(Time.timeScale);
+
         // Save the genome of the best performer
         if (Input.GetKeyDown(KeyCode.W))
         {
@@ -73,5 +84,18 @@ public class Simulation : MonoBehaviour
     public Structure GetBestCar()
     {
         return genePool.GetBestGenome();
+    }
+
+    public IDictionary<string, string> GetGenerationData()
+    {
+        IDictionary<string, string> generationData = new Dictionary<string, string>();
+        generationData.Add("generationNumber", generationNumber.ToString());
+        generationData.Add("populationNumber", POPULATION_SIZE.ToString());
+        generationData.Add("mutationRate", (MUTATION_RATE).ToString());
+        generationData.Add("mutationStrength", ((int)Math.Round(MUTATION_RADIUS * 100)).ToString());
+        //generationData.Add("maxFitness", "0");
+        generationData.Add("playBackSpeed", ((int)Time.timeScale).ToString());
+
+        return generationData;
     }
 }
