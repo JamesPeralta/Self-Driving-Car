@@ -91,8 +91,8 @@ public class Simulation : MonoBehaviour
         IDictionary<string, string> generationData = new Dictionary<string, string>();
         generationData.Add("generationNumber", generationNumber.ToString());
         generationData.Add("populationNumber", POPULATION_SIZE.ToString());
-        generationData.Add("mutationRate", (MUTATION_RATE).ToString());
-        generationData.Add("mutationStrength", ((int)Math.Round(MUTATION_RADIUS * 100)).ToString());
+        generationData.Add("mutationRate", (MUTATION_RATE * 100).ToString());
+        generationData.Add("mutationStrength", ((int)Math.Round(MUTATION_RADIUS)).ToString());
         //generationData.Add("maxFitness", "0");
         generationData.Add("playBackSpeed", ((int)Time.timeScale).ToString());
 
