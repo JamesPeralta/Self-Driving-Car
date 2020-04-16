@@ -15,6 +15,7 @@ public class DashboardManager : MonoBehaviour
     public Window_graph graph;
     private List<int> valuesList = new List<int>();
     private int startingGen = 1;
+    private int maxFitness;
 
     public void InitializeDashboard(IDictionary<string, string>  generationData)
     {
@@ -45,9 +46,13 @@ public class DashboardManager : MonoBehaviour
         playBackSpeedValue.text = playbackSpeedVal + "x";
     }
 
-    public void UpdateMaxFitness(int maxFitness)
+    public void UpdateMaxFitness(int genMaxFitness)
     {
-        maxFitnessValue.text = maxFitness.ToString();
+        if(genMaxFitness > maxFitness) {
+            maxFitnessValue.text = genMaxFitness.ToString();
+            maxFitness = genMaxFitness;
+        }
+        
         UpdateChart(-1, maxFitness);
     }
 
