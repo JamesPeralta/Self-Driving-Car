@@ -87,7 +87,7 @@ public class Window_graph : MonoBehaviour
         }
 
         int separatorCount = 10;
-        for (int i = 0; i < separatorCount; i++)
+        for (int i = 0; i <= separatorCount; i++)
         {
             RectTransform labelY = Instantiate(labelTemplateY);
             labelY.SetParent(graphContainer);

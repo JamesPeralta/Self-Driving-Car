@@ -74,6 +74,8 @@ public class Simulation : MonoBehaviour
 
         dashboard.UpdatePlaybackSpeed(Time.timeScale);
 
+        dashboard.UpdateCurrentMaxFitness(GetBestCar().GetFitness());
+
         // Save the genome of the best performer
         if (Input.GetKeyDown(KeyCode.W))
         {
@@ -92,7 +94,7 @@ public class Simulation : MonoBehaviour
         generationData.Add("generationNumber", generationNumber.ToString());
         generationData.Add("populationNumber", POPULATION_SIZE.ToString());
         generationData.Add("mutationRate", (MUTATION_RATE * 100).ToString());
-        generationData.Add("mutationStrength", ((int)Math.Round(MUTATION_RADIUS)).ToString());
+        generationData.Add("mutationStrength", (MUTATION_RADIUS).ToString());
         //generationData.Add("maxFitness", "0");
         generationData.Add("playBackSpeed", ((int)Time.timeScale).ToString());
 

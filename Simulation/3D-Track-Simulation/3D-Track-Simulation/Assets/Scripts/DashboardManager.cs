@@ -9,6 +9,7 @@ public class DashboardManager : MonoBehaviour
     public UnityEngine.UI.Text populationValue;
     public UnityEngine.UI.Text mutationRateValue;
     public UnityEngine.UI.Text mutationStrengthValue;
+    public UnityEngine.UI.Text maxCurrentFitnessValue;
     public UnityEngine.UI.Text maxFitnessValue;
     public UnityEngine.UI.Text playBackSpeedValue;
     public Window_graph graph;
@@ -48,6 +49,10 @@ public class DashboardManager : MonoBehaviour
     {
         maxFitnessValue.text = maxFitness.ToString();
         UpdateChart(-1, maxFitness);
+    }
+
+    public void UpdateCurrentMaxFitness(int maxFitness) {
+        maxCurrentFitnessValue.text = maxFitness.ToString();
     }
 
     public void UpdatePlaybackSpeed(float playbackSpeed)

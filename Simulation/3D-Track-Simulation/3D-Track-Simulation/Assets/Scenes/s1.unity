@@ -3044,6 +3044,18 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 11
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &460985393 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 4167534904606307967, guid: 40cb8733862f5098b94dc664c5ddc40a,
+    type: 3}
+  m_PrefabInstance: {fileID: 1419563660}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5f7201a12d95ffc409449d95f23cf332, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &469016932
 GameObject:
   m_ObjectHideFlags: 0
@@ -8658,12 +8670,22 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 357431736}
     m_Modifications:
+    - target: {fileID: 1552030023777861920, guid: 40cb8733862f5098b94dc664c5ddc40a,
+        type: 3}
+      propertyPath: m_AnchoredPosition.x
+      value: -95
+      objectReference: {fileID: 0}
     - target: {fileID: 2496871907422478366, guid: 40cb8733862f5098b94dc664c5ddc40a,
         type: 3}
       propertyPath: circleSprite
       value: 
       objectReference: {fileID: 21300000, guid: 581fe5dd79abf8a4b815b4514e46ae92,
         type: 3}
+    - target: {fileID: 3142613418796663051, guid: 40cb8733862f5098b94dc664c5ddc40a,
+        type: 3}
+      propertyPath: m_Text
+      value: 'Mutation Radius: '
+      objectReference: {fileID: 0}
     - target: {fileID: 3142613420094006561, guid: 40cb8733862f5098b94dc664c5ddc40a,
         type: 3}
       propertyPath: m_Name
@@ -8809,6 +8831,21 @@ PrefabInstance:
       propertyPath: graph
       value: 
       objectReference: {fileID: 2127086419}
+    - target: {fileID: 3142613420094006565, guid: 40cb8733862f5098b94dc664c5ddc40a,
+        type: 3}
+      propertyPath: maxCurrentFitnessValue
+      value: 
+      objectReference: {fileID: 460985393}
+    - target: {fileID: 8355786510206471177, guid: 40cb8733862f5098b94dc664c5ddc40a,
+        type: 3}
+      propertyPath: m_SizeDelta.x
+      value: 160
+      objectReference: {fileID: 0}
+    - target: {fileID: 8355786510206471177, guid: 40cb8733862f5098b94dc664c5ddc40a,
+        type: 3}
+      propertyPath: m_AnchoredPosition.x
+      value: 120
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 40cb8733862f5098b94dc664c5ddc40a, type: 3}
 --- !u!1 &1427633324
