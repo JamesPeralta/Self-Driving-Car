@@ -138,7 +138,7 @@ public class Structure: MonoBehaviour, IComparable<Structure>
         {
             writer.WriteLine(genome[i]);
         }
-
+        
         writer.Close();
     }
 }

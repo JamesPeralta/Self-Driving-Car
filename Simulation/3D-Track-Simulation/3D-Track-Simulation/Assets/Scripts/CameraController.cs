@@ -61,7 +61,6 @@ public class CameraController : MonoBehaviour
     {
         if (Input.GetKeyDown("space"))
         {
-            Debug.Log(pos);
             pos = (pos + 1) % 3;
         }
     }
