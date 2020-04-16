@@ -13,6 +13,7 @@ public class DashboardManager : MonoBehaviour
     public UnityEngine.UI.Text playBackSpeedValue;
     public Window_graph graph;
     private List<int> valuesList = new List<int>();
+    private int startingGen = 1;
 
     public void InitializeDashboard(IDictionary<string, string>  generationData)
     {
@@ -62,6 +63,11 @@ public class DashboardManager : MonoBehaviour
     public void UpdateChart(int generation, int maxFitness)
     {
         valuesList.Add(maxFitness);
-        graph.ShowGraph(valuesList);
+        // Remove the first element if it exceeds the max
+        if(valuesList.Count > 10) {
+            valuesList.RemoveAt(0);
+            startingGen++;
+        }
+        graph.ShowGraph(valuesList, startingGen);
     }
 }

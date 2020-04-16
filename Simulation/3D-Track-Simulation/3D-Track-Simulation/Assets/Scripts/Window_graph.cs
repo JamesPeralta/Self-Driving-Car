@@ -10,6 +10,8 @@ public class Window_graph : MonoBehaviour
     private RectTransform graphContainer;
     private RectTransform labelTemplateX;
     private RectTransform labelTemplateY;
+    private List<GameObject> previousGraph;
+    private List<RectTransform> previousAxis;
 
     private void Awake()
     {
@@ -19,8 +21,10 @@ public class Window_graph : MonoBehaviour
 
 
         List<int> valuesList = new List<int>();
+        previousGraph = new List<GameObject>();
+        previousAxis = new List<RectTransform>();
 
-        ShowGraph(valuesList);
+        ShowGraph(valuesList, 0);
     }
 
     private GameObject CreateCircle(Vector2 anchoredPosition)
@@ -37,11 +41,26 @@ public class Window_graph : MonoBehaviour
         return gameObject;
     }
 
-    public void ShowGraph(List<int> valueList)
+    public void ShowGraph(List<int> valueList, int startingGen)
     {
+        // Destroy the links of the previous graph
+        foreach (GameObject g in previousGraph)
+        {
+            Destroy(g);
+        }
+        previousGraph.Clear();
+
+        // Remove the previous axis labels so we can add new ones
+        foreach (RectTransform a in previousAxis)
+        {
+            a.gameObject.SetActive(false);
+        }
+        previousAxis.Clear();
+
         float graphHeight = graphContainer.sizeDelta.y;
         float yMax = 150;
-        float xSize = 15f;
+        float xSize = 17f;
+
         GameObject prevCircleGameObject = null;
         for (int i = 0; i < valueList.Count; i++)
         {
@@ -60,7 +79,11 @@ public class Window_graph : MonoBehaviour
             labelX.SetParent(graphContainer);
             labelX.gameObject.SetActive(true);
             labelX.anchoredPosition = new Vector2(xPosition, -3f);
-            labelX.GetComponent<Text>().text = i.ToString();
+            labelX.GetComponent<Text>().text = startingGen.ToString();
+
+            previousGraph.Add(circleGameObject);
+            previousAxis.Add(labelX);
+            startingGen++;
         }
 
         int separatorCount = 10;
@@ -70,9 +93,10 @@ public class Window_graph : MonoBehaviour
             labelY.SetParent(graphContainer);
             labelY.gameObject.SetActive(true);
             float normalizedValue = i * 1f / separatorCount;
-            labelY.anchoredPosition = new Vector2(-17f, normalizedValue * graphHeight);
+            labelY.anchoredPosition = new Vector2(-20f, normalizedValue * graphHeight);
             labelY.GetComponent<Text>().text = Mathf.RoundToInt(normalizedValue * yMax).ToString();
 
+            previousAxis.Add(labelY);
         }
     }
 
@@ -91,5 +115,7 @@ public class Window_graph : MonoBehaviour
         rectTransform.sizeDelta = new Vector2(distance, 2f);
         rectTransform.anchoredPosition = dotPosition1 + dir * distance * .5f;
         rectTransform.localEulerAngles = new Vector3(0, 0, Mathf.Atan2(dir.y, dir.x) * Mathf.Rad2Deg);
+
+        previousGraph.Add(gameObject);
     }
 }
