@@ -53,7 +53,7 @@ public class DashboardManager : MonoBehaviour
             maxFitness = genMaxFitness;
         }
         
-        UpdateChart(-1, maxFitness);
+        UpdateChart(genMaxFitness);
     }
 
     public void UpdateCurrentMaxFitness(int maxFitness) {
@@ -70,9 +70,9 @@ public class DashboardManager : MonoBehaviour
         generationValue.text = generation.ToString();
     }
 
-    public void UpdateChart(int generation, int maxFitness)
+    public void UpdateChart(int fitness)
     {
-        valuesList.Add(maxFitness);
+        valuesList.Add(fitness);
         // Remove the first element if it exceeds the max
         if(valuesList.Count > 10) {
             valuesList.RemoveAt(0);
