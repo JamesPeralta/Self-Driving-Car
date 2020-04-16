@@ -144,13 +144,14 @@ public class CarController : MonoBehaviour
             hitWall = true;
             frontDriverW.motorTorque = 0;
             frontPassengerW.motorTorque = 0;
+            rb.velocity = new Vector3(0, 0, 0);
         }
     }
 
     void OnTriggerEnter(Collider collision)
     {
         int nextCheckpoint = (fitness % 118 ) + 1;
-        if (collision.gameObject.name == ("CheckPoint (" + nextCheckpoint + ")"))
+        if (collision.gameObject.name == ("CheckPoint (" + nextCheckpoint + ")") && hitWall == false)
         {
             fitness += 1;
         }
