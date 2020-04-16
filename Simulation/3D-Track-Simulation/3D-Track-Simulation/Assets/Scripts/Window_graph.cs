@@ -58,7 +58,7 @@ public class Window_graph : MonoBehaviour
         previousAxis.Clear();
 
         float graphHeight = graphContainer.sizeDelta.y;
-        float yMax = 150;
+        float yMax = 118;
         float xSize = 17f;
 
         GameObject prevCircleGameObject = null;
