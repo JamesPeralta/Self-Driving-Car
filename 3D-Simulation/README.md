@@ -13,5 +13,5 @@ To change configurations go to Hierarchy/Insepector and you will see the configu
 # Configurable GA parameters
  - mutation rate: integer
  - mutation radius: float (optimal at 0.5)
- - population size: integer
+ - population size: Even positive integer (defaults to 50 when odd)
  - weights file: Needs to be a .txt file that is located in the \Assests\Scripts\NN-Weights folder
