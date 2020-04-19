@@ -11,3 +11,7 @@ All of the parameters for the genetic algorithm can be modified through the Terr
 To change configurations go to Hierarchy/Insepector and you will see the configurable parameters for the GA.
 ---
 # Configurable GA parameters
+ - mutation rate: integer
+ - mutation radius: float (optimal at 0.5)
+ - population size: integer
+ - weights file: Needs to be a .txt file that is located in the \Assests\Scripts\NN-Weights folder
