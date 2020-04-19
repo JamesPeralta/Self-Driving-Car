@@ -1,6 +1,6 @@
 # 3D Self-driving car simulation
 ---
-# Key legend
+# Special keyboard shortcuts
  - a: Slow down playback speed by 1
  - s: Speed up playback speed by 1
  - w: Save weights of neural network
