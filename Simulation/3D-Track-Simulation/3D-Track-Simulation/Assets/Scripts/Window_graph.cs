@@ -59,7 +59,7 @@ public class Window_graph : MonoBehaviour
 
         float graphHeight = graphContainer.sizeDelta.y;
         float yMax = 118;
-        float xSize = 16f;
+        float xSize = 20.5f;
 
         GameObject prevCircleGameObject = null;
         for (int i = 0; i < valueList.Count; i++)
@@ -78,7 +78,7 @@ public class Window_graph : MonoBehaviour
             RectTransform labelX = Instantiate(labelTemplateX);
             labelX.SetParent(graphContainer);
             labelX.gameObject.SetActive(true);
-            labelX.anchoredPosition = new Vector2(xPosition, -3f);
+            labelX.anchoredPosition = new Vector2(xPosition, -4f);
             labelX.GetComponent<Text>().text = startingGen.ToString();
 
             previousGraph.Add(circleGameObject);
