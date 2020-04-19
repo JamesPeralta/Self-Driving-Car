@@ -8,7 +8,7 @@ using UnityEngine;
 
 public class Simulation : MonoBehaviour
 {
-    private int MUTATION_RATE = 50; // As a %
+    private int MUTATION_RATE = 10; // As a %
     private float MUTATION_RADIUS = 0.5f;
     public int POPULATION_SIZE;
     private string WEIGHTS_FILE = null;
