@@ -1,5 +1,9 @@
 # 3D Self-driving car simulation
 ---
+# Loading simulation scene
+ - To load the proper scene, open the project an unity and navigate to 
+    /Assets/Scenes/s1
+---
 # Special keyboard shortcuts
  - a: Slow down playback speed by 1
  - s: Speed up playback speed by 1
