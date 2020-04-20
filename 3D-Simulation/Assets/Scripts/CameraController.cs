@@ -1,20 +1,24 @@
-﻿using System.Collections;
-using System.Collections.Generic;
+﻿/* This class contains all of the logic related to the camera control in game view
+ * It follows car with the highest fitness function and has three points of views.
+ * Birds-eye from the right, birds-eye from the left, and third person. 
+*/
 using UnityEngine;
 
 
 public class CameraController : MonoBehaviour
 {
-    private const int FIRST_PERSON = 0;
+    // Constants
+    private const int THIRD_PERSON = 0;
     private const int BIRDS_EYE_LEFT = 1;
     private const int BIRDS_EYE_RIGHT = 2;
 
     public Transform objectToFollow;
     public Vector3 offset;
+    private int pos;
     public float followSpeed = 10;
     public float lookSpeed = 10;
-    private int pos;
 
+    // Rotate camera towards the target
     public void LookAtTarget()
     {
         Vector3 _lookDirection = objectToFollow.position - transform.position;
@@ -22,7 +26,8 @@ public class CameraController : MonoBehaviour
         transform.rotation = Quaternion.Lerp(transform.rotation, _rot, lookSpeed * Time.deltaTime);
     }
 
-    public void MoveToTarget()
+    #region Camera Angles
+    public void FollowThirdPerson()
     {
         Vector3 _targetPos = objectToFollow.position + 
                              objectToFollow.forward * offset.z + 
@@ -41,7 +46,9 @@ public class CameraController : MonoBehaviour
     {
         transform.position = Vector3.Lerp(transform.position, objectToFollow.transform.position + new Vector3(-50, 50, 50), followSpeed * Time.deltaTime); ;
     }
+    #endregion
 
+    // Finds the car with the best fitness and locks onto it
     public void ChooseTarget()
     {
         Simulation simulation = GameObject.FindObjectOfType<Simulation>();
@@ -50,13 +57,14 @@ public class CameraController : MonoBehaviour
         objectToFollow = bestStructure.GetCar().gameObject.transform;
     }
 
-    // Start is called before the first frame update
+    // Start the camera in birds eye view
     void Start()
     {
         pos = 0;
     }
 
-
+    // Check for camera angle changes from the user and update
+    // camera position accordingly
     void Update()
     {
         if (Input.GetKeyDown("space"))
@@ -65,17 +73,18 @@ public class CameraController : MonoBehaviour
         }
     }
 
+    // Update the cameras position and location on every frame
     public void FixedUpdate()
     {
         Object[] allPlayers = GameObject.FindGameObjectsWithTag("Player");
 
         if (allPlayers.Length > 0)
         {
-            if (pos == FIRST_PERSON)
+            if (pos == THIRD_PERSON)
             {
                 ChooseTarget();
                 LookAtTarget();
-                MoveToTarget();
+                FollowThirdPerson();
             }
             else if (pos == BIRDS_EYE_RIGHT)
             {

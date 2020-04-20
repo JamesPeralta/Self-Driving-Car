@@ -1,10 +1,15 @@
-using System.Collections;
-using System.Collections.Generic;
+/* This is the main class that allows a car to interact with the environment
+ * This class contains the logic that allows a car to drive, detect collisions
+ * with walls, and the logic for the proximity sensors.
+ *
+ * This class also contains the logic that feeds the input of the environment
+ * into the neural network, retrieves these results, and then applys the action
+ * that the neural network has recommended. */
+
 using UnityEngine;
 
 public class CarController : MonoBehaviour
 {
-    #region Variables required to navigate enviroment
     // Input used to apply force to a car
     private float m_horizontalInput;
     private float m_verticalInput;
@@ -21,10 +26,8 @@ public class CarController : MonoBehaviour
     public LayerMask raycastMask; // Specifies which layers a raycast can hit
     private float[] input = new float[4]; // Input to the neural network
     public float probingDistance; // Distance proximity sensor can probe
-    #endregion
 
 
-    #region Variables required to manage state of the car
     public Rigidbody rb;
     public BoxCollider boxCollider;
     private NeuralNetwork myNN;
@@ -33,7 +36,6 @@ public class CarController : MonoBehaviour
     private int fitness;
     public bool hitWall = false;
     private int lastFitness;
-    #endregion
 
     #region Getters/Setters
     public int GetFitness()
@@ -63,6 +65,8 @@ public class CarController : MonoBehaviour
         IgnoreContactWithOtherCars();
     }
 
+    // On each frame, get the input of the environment and steer the
+    // car according to the recommendations placed by the neural network
     private void FixedUpdate()
     {
         if (myNN != null && carStarted && hitWall == false)
@@ -74,12 +78,16 @@ public class CarController : MonoBehaviour
         }
         else
         {
+            // If a car has not been started or has hit a wall
+            // make sure it is stationary
             rb.velocity = new Vector3(0, 0, 0);
         }
     }
     #endregion
 
     #region Functions that manage car movement
+    // Get input from the proximity sensors, run it throught the
+    // neural network, and set the vertical and horizontal outputs
     private void GetInput()
     {
         GetInputFromProximitySensors();
@@ -107,6 +115,7 @@ public class CarController : MonoBehaviour
         }
     }
 
+    // Turn the wheels of the car left or right
     private void Steer()
     {
         m_steeringAngle = maxSteerAngle * m_horizontalInput;
@@ -114,12 +123,14 @@ public class CarController : MonoBehaviour
         frontPassengerW.steerAngle = m_steeringAngle;
     }
 
+    // Apply an acceleration force or brake force
     private void Accelerate()
     {
         frontDriverW.motorTorque = m_verticalInput * motorForce;
         frontPassengerW.motorTorque = m_verticalInput * motorForce;
     }
 
+    // Update the angle of the wheel to give wheel spinning effects
     private void UpdateWheelPoses()
     {
         UpdateWheelPose(frontDriverW, frontDriverT);
@@ -128,6 +139,7 @@ public class CarController : MonoBehaviour
         UpdateWheelPose(rearPassengerW, rearPassengerT);
     }
 
+    // Update wheel poses helper function
     private void UpdateWheelPose(WheelCollider collider, Transform transform)
     {
         Vector3 pos = transform.position;
@@ -143,6 +155,7 @@ public class CarController : MonoBehaviour
     #region Functions that manage collisions
     void OnCollisionEnter(Collision collision)
     {
+        // If this car crashes into a barrier, set the hitWall flag o
         if (collision.collider.gameObject.tag == "Barrier")
         {
             hitWall = true;
@@ -151,18 +164,22 @@ public class CarController : MonoBehaviour
 
     void OnTriggerEnter(Collider collision)
     {
+        // Increment the fitness, only if it passes the next checkpoint it hasn't reached
+        // yet in incremental fashion. 
         int nextCheckpoint = (fitness % 118 ) + 1;
         if (collision.gameObject.name == ("CheckPoint (" + nextCheckpoint + ")") && hitWall == false)
         {
             fitness += 1;
         }
 
+        // Stop at the last checkpoint
         if (collision.gameObject.name == "CheckPoint (118)")
         {
             hitWall = true;
         }
     }
 
+    // Get's the proximity sensors input using raycasting
     void GetInputFromProximitySensors()
     {
         Vector3 forwardSensor = transform.forward;
@@ -193,6 +210,7 @@ public class CarController : MonoBehaviour
         input[3] = rb.velocity.magnitude;
     }
 
+    // This function allows all cars to navigate the map without crashing into each other
     void IgnoreContactWithOtherCars()
     {
         Object[] allWheels = GameObject.FindObjectsOfType(typeof(WheelCollider));

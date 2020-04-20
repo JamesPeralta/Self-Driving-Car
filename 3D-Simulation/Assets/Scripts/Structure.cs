@@ -1,11 +1,14 @@
-﻿using System;
-using System.Collections;
+﻿/*  Implementation of the potential solutions that are tested in the Environment.
+ *  When instantiated, objects of this class type will contain a genome, a car,
+ *  and a Neural Network.
+ *
+ *  Class inspired by: Andrew Burton Groeneveldt
+ */
+using System;
 using System.Collections.Generic;
 using UnityEngine;
 using System.IO;
 using System.Linq;
-
-// TODO: Implement N point crossover
 
 public class Structure: MonoBehaviour, IComparable<Structure>
 {
@@ -23,13 +26,13 @@ public class Structure: MonoBehaviour, IComparable<Structure>
     {
         genome = _genome;
 
-        // Instantiate the car
+        // Instantiate the car at the starting line
         GameObject instance = Resources.Load("HatchBack") as GameObject;
         car = (Instantiate(instance)).GetComponent<CarController>();
         GameObject startingLine = GameObject.Find("Starting Line");
         car.transform.position = startingLine.gameObject.transform.position;
 
-        // Instantiate the Neural Network
+        // Instantiate the Neural Network object
         neuralNetwork = new NeuralNetwork(LAYER_SIZES);
 
         // If the genome is invalid, create a new random genome
@@ -42,15 +45,10 @@ public class Structure: MonoBehaviour, IComparable<Structure>
         }
     }
 
+    #region Getters/Setters
     public CarController GetCar()
     {
         return car;
-    }
-
-    public void Evaluate()
-    {
-        neuralNetwork.ConfigureNeuralNetwork(genome);
-        car.SetNeuralNetwork(neuralNetwork);
     }
 
     public bool IsAlive()
@@ -67,7 +65,18 @@ public class Structure: MonoBehaviour, IComparable<Structure>
     {
         return car.GetFitness();
     }
+    #endregion
 
+    // Configures the neural network with the genome of this structure
+    // and starts the car on the track
+    public void Evaluate()
+    {
+        neuralNetwork.ConfigureNeuralNetwork(genome);
+        car.SetNeuralNetwork(neuralNetwork);
+    }
+
+    // This is used by the IComparable<Structure> interface to enable the sort() function
+    // for a list of these classes 
     public int CompareTo(Structure other)
     {
         if (car.GetFitness() > other.car.GetFitness())
@@ -84,7 +93,10 @@ public class Structure: MonoBehaviour, IComparable<Structure>
         }
     }
 
-    //used as a simple mutation function for any genetic implementations.
+    /* Mutation function.
+     *
+     * mutationRate: as a percentage
+    */
     public void Mutate(int mutationRate, float mutationRadius)
     {
         for (int i = 0; i < genome.Count; i++)
@@ -93,6 +105,7 @@ public class Structure: MonoBehaviour, IComparable<Structure>
         }
     }
 
+    // Returns a deep copied array of this geneome 
     public List<float> deepCopyGenome()
     {
         List<float> genomeCopy = new List<float>();
@@ -104,7 +117,9 @@ public class Structure: MonoBehaviour, IComparable<Structure>
         return genomeCopy;
     }
 
-    public void LoadGenomeFromFile(string fileName)//this loads the biases and weights from within a file into the neural network.
+    #region Load/Save genomes from a file
+    // Loads the biases and weights from within a file into the neural network.
+    public void LoadGenomeFromFile(string fileName)
     {
         string filePath = WEIGHTS_PATH + fileName;
 
@@ -129,7 +144,8 @@ public class Structure: MonoBehaviour, IComparable<Structure>
         }
     }
 
-    public void SaveGenomeToFile()//this is used for saving the biases and weights within the network to a file.
+    // Saves the biases and weights within the network to a file.
+    public void SaveGenomeToFile()
     {
         File.Create(SAVE_PATH).Close();
         StreamWriter writer = new StreamWriter(SAVE_PATH, true);
@@ -141,4 +157,5 @@ public class Structure: MonoBehaviour, IComparable<Structure>
         
         writer.Close();
     }
+    #endregion
 }

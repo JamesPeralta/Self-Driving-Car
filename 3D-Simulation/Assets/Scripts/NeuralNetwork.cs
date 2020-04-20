@@ -1,4 +1,9 @@
-﻿using System;
+﻿/* This class contains all of the functionality related to the neural network.
+ *
+ * Code inspirded by: https://towardsdatascience.com/building-a-neural-network-framework-in-c-16ef56ce1fef
+*/
+
+using System;
 using System.Collections.Generic;
 
 
@@ -9,6 +14,8 @@ public class NeuralNetwork
     private float[][] biases;
     private float[][][] weights;
 
+    // Defines the architecture of this neural network as a list.
+    // [4, 7, 4] = Input layer of 4, hidden layer of 7, output layer of 4
     public NeuralNetwork(int[] layers)
     {
         this.layers = new int[layers.Length];
@@ -21,6 +28,7 @@ public class NeuralNetwork
         InitWeights();
     }
 
+    #region Initialization functions
     private void InitNeurons()
     {
         List<float[]> neuronsList = new List<float[]>();
@@ -66,12 +74,16 @@ public class NeuralNetwork
         }
         weights = weightsList.ToArray();
     }
+    #endregion
 
+    // Activation function that uses Tanh
     public float activate(float value)
     {
         return (float)Math.Tanh(value);
     }
 
+    // Feeds the information forward through the neural network and returns the
+    // index of the output node with the most stimulus
     public int FeedForward(float[] inputs)
     {
         // Initialize the input layer values
@@ -98,6 +110,7 @@ public class NeuralNetwork
         return GetMaxIndex(neurons[neurons.Length - 1]);
     }
 
+    // Configures the weights and biases of the neural network using a 1D list
     public void ConfigureNeuralNetwork(List<float> genome)
     {
         int index = 0;
