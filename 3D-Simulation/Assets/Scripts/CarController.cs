@@ -80,7 +80,7 @@ public class CarController : MonoBehaviour
         {
             // If a car has not been started or has hit a wall
             // make sure it is stationary
-            rb.velocity = new Vector3(0, 0, 0);
+            rb.linearVelocity = new Vector3(0, 0, 0);
         }
     }
     #endregion
@@ -207,7 +207,7 @@ public class CarController : MonoBehaviour
         }
 
         // Speed in meters per second
-        input[3] = rb.velocity.magnitude;
+        input[3] = rb.linearVelocity.magnitude;
     }
 
     // This function allows all cars to navigate the map without crashing into each other
